@@ -1,56 +1,55 @@
 package com.station3.dabang.member.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.station3.dabang.member.controller.dto.request.MemberCreateRequest;
+import com.station3.dabang.member.controller.dto.response.MemberCreateResponse;
+import com.station3.dabang.member.service.MemberService;
+
+@WebMvcTest(MemberController.class)
 public class MemberControllerTest {
 
+	@Autowired
 	private MockMvc mockMvc;
-	private MemberController memberController;
+
+	@MockBean
+    private MemberService memberService;
 	
-	@BeforeEach
-	private void init() {
-		memberController = new MemberController();
-		this.mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
-	}
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
+	private static final String email = "admin@station3.co.kr";
+	private static final String password = "test";
 	
 	@Test
-	public void 회원가입_API호출_테스트() throws Exception {
+	@DisplayName("회원가입")
+	public void registerMemeber() throws Exception {
 		//given
-		Map<String, String> memeberCreateForm = new HashMap<String, String>();
-		memeberCreateForm.put("email", "admin@station3.co.kr");
-		memeberCreateForm.put("password", "test");
-		 
+		MemberCreateRequest memeberCreateRequest = new MemberCreateRequest(email, password);
+		MemberCreateResponse memberCreateResponse = new MemberCreateResponse(1L, email, password);
+		doReturn(memberCreateResponse).when(memberService).create(any());
+		
 		//when
-		MvcResult mvcResult = mockMvc.perform(
-					post("/members")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(new ObjectMapper().writeValueAsString(memeberCreateForm))
-				)
-				.andExpect(status().isOk())
-				.andDo(print())
-				.andReturn();
-		
-		//then
-		assertEquals("ok", mvcResult.getResponse().getContentAsString());
-	}
-	
-	@Test
-	public void 회원가입시_필수값이없으면_오류() {
-		
+		mockMvc.perform(
+				post("/members")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(memeberCreateRequest))
+		)
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("email").value(email))
+		.andExpect(jsonPath("password").value(password));
 	}
 
 }

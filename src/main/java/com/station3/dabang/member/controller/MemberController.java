@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.station3.dabang.member.controller.dto.request.MemeberCreateRequest;
+import com.station3.dabang.member.controller.dto.request.MemberCreateRequest;
+import com.station3.dabang.member.controller.dto.response.MemberCreateResponse;
+import com.station3.dabang.member.service.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 
 /**
 * @Project : station3.dabang.project
@@ -18,11 +21,14 @@ import io.swagger.v3.oas.annotations.Operation;
 */
 @RequestMapping("/members")
 @RestController
+@RequiredArgsConstructor
 public class MemberController {
+	
+	private final MemberService memberService;
 	
 	@PostMapping
     @Operation(summary = "회원가입", description = "회원가입 api")
-	private String create(@RequestBody MemeberCreateRequest memeberCreateRequest) {
-		return "ok";
+	private MemberCreateResponse create(@RequestBody MemberCreateRequest memeberCreateRequest) {
+		return memberService.create(memeberCreateRequest);
 	}
 }
