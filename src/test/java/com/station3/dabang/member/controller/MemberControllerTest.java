@@ -41,7 +41,8 @@ public class MemberControllerTest {
 	public void registerMemeber() throws Exception {
 		//given
 		MemberCreateRequest memeberCreateRequest = new MemberCreateRequest(email.getValue(), password.getValue());
-		MemberCreateResponse memberCreateResponse = new MemberCreateResponse(1L, email);
+		MemberCreateResponse memberCreateResponse = new MemberCreateResponse(1L, email, "jwtToken");
+		
 		doReturn(memberCreateResponse).when(memberService).create(any());
 		
 		//when

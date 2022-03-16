@@ -11,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberCreateResponse {
 	private final Long id;
 	private final Email email;
+	private final String jwtToken;
 
-	public static MemberCreateResponse from(Member member) {
-        return new MemberCreateResponse(member.getId(), member.getEmail());
+	public static MemberCreateResponse from(Member member, String jwtToken) {
+        return new MemberCreateResponse(member.getId(), member.getEmail(), jwtToken);
 	}
 }

@@ -10,6 +10,7 @@ import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.member.service.MemberService;
+import com.station3.dabang.security.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
 	@Override
 	@Transactional
@@ -27,7 +29,7 @@ public class MemberServiceImpl implements MemberService{
 		}
 		
 		Member saveMember = memberRepository.save(memberCreateRequest.toMemeber());
-		return MemberCreateResponse.from(saveMember);
+		return MemberCreateResponse.from(saveMember, jwtTokenProvider.createToken(saveMember.getEmail().getValue()));
 	}
 	
 }
