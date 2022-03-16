@@ -19,7 +19,7 @@ public class MemberCreateRequest {
 	@ApiModelProperty(value = "email", example = "admin@station3.co.kr")
 	private final String email;	
 
-    @ApiModelProperty(value = "password", example = "test")
+    @ApiModelProperty(value = "password", example = "Station3#")
 	private final String password;
     
     public Member toMemeber() {

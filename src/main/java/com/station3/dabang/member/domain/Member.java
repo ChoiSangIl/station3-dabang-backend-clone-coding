@@ -6,11 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.station3.dabang.common.domain.BaseEntity;
+
 import lombok.Getter;
 
 @Getter
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
