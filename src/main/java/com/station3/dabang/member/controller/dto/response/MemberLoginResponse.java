@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 @ApiModel
-public class MemberCreateResponse {
+public class MemberLoginResponse {
 	@ApiModelProperty(value = "id")
 	private final Long id;
 
@@ -21,8 +21,7 @@ public class MemberCreateResponse {
 	@ApiModelProperty(value = "token")
 	private final String jwtToken;
 
-
-	public static MemberCreateResponse from(Member member, String jwtToken) {
-        return new MemberCreateResponse(member.getId(), member.getEmail(), jwtToken);
+	public static MemberLoginResponse from(Member member, String jwtToken) {
+        return new MemberLoginResponse(member.getId(), member.getEmail(), jwtToken);
 	}
 }

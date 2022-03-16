@@ -1,4 +1,4 @@
-package com.station3.dabang.member.service.impl;
+package com.station3.dabang.member.service;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -10,17 +10,21 @@ import static org.mockito.Mockito.mock;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.station3.dabang.member.controller.dto.request.MemberCreateRequest;
+import com.station3.dabang.member.controller.dto.request.MemberLoginRequest;
 import com.station3.dabang.member.controller.dto.response.MemberCreateResponse;
+import com.station3.dabang.member.controller.dto.response.MemberLoginResponse;
 import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.member.domain.Password;
-import com.station3.dabang.member.service.MemberService;
+import com.station3.dabang.member.service.impl.MemberServiceImpl;
 import com.station3.dabang.security.JwtTokenProvider;
 
-public class MemeberServiceTest {
+public class MemberServiceTest {
 
 	private final Email email = new Email("admin@station3.co.kr");
 	private final Password password = new Password("Station3#");
@@ -28,16 +32,19 @@ public class MemeberServiceTest {
 	
 	private final MemberRepository memberRepository = mock(MemberRepository.class);
 	private final JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
-    private final MemberService memberService = new MemberServiceImpl(memberRepository, jwtTokenProvider);
+	private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+	private final AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+    private final MemberService memberService = new MemberServiceImpl(memberRepository, passwordEncoder, jwtTokenProvider, authenticationManager);
 
 	@Test
 	@DisplayName("회원을 등록한다")
-	public void createMemeber() {
+	public void createTest() {
 		//given
 		MemberCreateRequest memberCreateRequest = new MemberCreateRequest(email.getValue(), password.getValue());
 		Member member = new Member(1L, email.getValue(), password.getValue());
 		doReturn(member).when(memberRepository).save(any());
 		doReturn(jwtToken).when(jwtTokenProvider).createToken(any());
+		doReturn(password.getValue()).when(passwordEncoder).encode(any());
 		
 		//when
 		MemberCreateResponse memberCreateResponse = memberService.create(memberCreateRequest);
@@ -61,6 +68,27 @@ public class MemeberServiceTest {
 		assertThatExceptionOfType(IllegalArgumentException.class)
 			.isThrownBy(callable)
 			.withMessageMatching("이메일이 중복되었습니다.");
+	}
+	
+	@Test
+	@DisplayName("아이디 암호로 로그인 할 수 있다.")
+	public void loginTest() {
+		//given
+		MemberLoginRequest memberLoginRequest = new MemberLoginRequest(email.getValue(), password.getValue());
+		Member member = new Member(1L, email.getValue(), password.getValue());
+
+		doReturn(member).when(memberRepository).findByEmail(any());
+		doReturn(jwtToken).when(jwtTokenProvider).createToken(any());
+		
+		//when
+		MemberLoginResponse memberLoginResponse = memberService.login(memberLoginRequest);
+		
+		//then
+		assertAll(
+			()->assertEquals(memberLoginResponse.getEmail(), member.getEmail()),
+			()->assertEquals(memberLoginResponse.getId(), member.getId()),
+			()->assertEquals(memberLoginResponse.getJwtToken(), jwtToken)
+		);
 	}
 
 }

@@ -8,8 +8,8 @@ import lombok.Getter;
 
 @Getter
 @ApiModel
-public class MemberCreateRequest {
-    public MemberCreateRequest(String email, String password) {
+public class MemberLoginRequest {
+    public MemberLoginRequest(String email, String password) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -19,11 +19,7 @@ public class MemberCreateRequest {
 	private final String email;	
 
     @ApiModelProperty(value = "password", example = "Station3#")
-	private String password;
-    
-    public void passwordEncryption(String password) {
-    	this.password = password;
-	}
+	private final String password;
     
     public Member toMemeber() {
     	return new Member(email, password);
