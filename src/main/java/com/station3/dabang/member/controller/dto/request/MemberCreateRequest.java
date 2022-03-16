@@ -5,7 +5,6 @@ import com.station3.dabang.member.domain.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @ApiModel

@@ -1,5 +1,6 @@
 package com.station3.dabang.member.domain;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,11 +14,15 @@ public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String email;
-	private String password;
+
+	@Embedded
+	private Email email;
+
+	@Embedded
+	private Password password;
 	
 	public Member(String email, String password) {
-		this.email = email;
-		this.password = password;
+		this.email = new Email(email);
+		this.password = new Password(password);
 	}
 }
