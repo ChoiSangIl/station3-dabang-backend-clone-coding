@@ -41,7 +41,7 @@ public class MemberControllerTest {
 	public void registerMemeber() throws Exception {
 		//given
 		MemberCreateRequest memeberCreateRequest = new MemberCreateRequest(email.getValue(), password.getValue());
-		MemberCreateResponse memberCreateResponse = new MemberCreateResponse(1L, email, password);
+		MemberCreateResponse memberCreateResponse = new MemberCreateResponse(1L, email);
 		doReturn(memberCreateResponse).when(memberService).create(any());
 		
 		//when
@@ -53,8 +53,7 @@ public class MemberControllerTest {
 		
 		//then
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("email.value").value(email.getValue()))
-		.andExpect(jsonPath("password.value").value(password.getValue()));
+		.andExpect(jsonPath("email.value").value(email.getValue()));
 	}
 
 }
