@@ -23,6 +23,10 @@ public class Member extends BaseEntity{
 	@Embedded
 	private Password password;
 	
+	public Member() {
+		
+	}
+	
 	public Member(String email, String password) {
 		this.email = new Email(email);
 		this.password = new Password(password);
