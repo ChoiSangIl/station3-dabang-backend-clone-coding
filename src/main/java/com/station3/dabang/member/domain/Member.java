@@ -1,5 +1,6 @@
 package com.station3.dabang.member.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import lombok.Getter;
 public class Member extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="MEMBER_ID")
 	private Long id;
 
 	@Embedded
