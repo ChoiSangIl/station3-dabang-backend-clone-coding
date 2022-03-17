@@ -13,14 +13,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
+import com.station3.dabang.common.domain.BaseEntity;
 import com.station3.dabang.member.domain.Member;
 
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Room {
+public class Room extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ROOM_NUMBER")
@@ -36,6 +38,9 @@ public class Room {
 	@Column(name="ROOM_TYPE")
 	@Enumerated(EnumType.STRING)
 	private RoomType type;
+	
+	@Version
+	private Long version;
 	
 	public void changeType(RoomType type) {
 		this.type = type;

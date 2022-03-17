@@ -10,13 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.station3.dabang.common.domain.BaseEntity;
+
 import lombok.Getter;
 import lombok.ToString;
 
 @Entity
 @Getter
 @ToString
-public class Deal {
+public class Deal extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
