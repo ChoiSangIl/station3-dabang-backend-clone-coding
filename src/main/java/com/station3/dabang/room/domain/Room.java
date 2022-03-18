@@ -28,8 +28,11 @@ public class Room extends BaseEntity{
 	@Column(name="ROOM_NUMBER")
 	private Long id;
 	
+	@Version
+	private Long version;
+	
 	@OneToMany(mappedBy="room")
-	List<Deal> deal = new ArrayList<Deal>();
+	List<Deal> deals = new ArrayList<Deal>();
 	
 	@OneToOne
 	@JoinColumn(name="MEMBER_ID")
@@ -38,9 +41,6 @@ public class Room extends BaseEntity{
 	@Column(name="ROOM_TYPE")
 	@Enumerated(EnumType.STRING)
 	private RoomType type;
-	
-	@Version
-	private Long version;
 	
 	public void changeType(RoomType type) {
 		this.type = type;
@@ -56,6 +56,24 @@ public class Room extends BaseEntity{
 	public Room(Member member, RoomType type) {
 		this.member = member;
 		this.type = type;
+	}
+	
+	public Room(RoomType type, List<Deal> deal) {
+		this.type = type;
+		this.deals = deal;
+	}
+	
+	public void addDeal(Deal deal) {
+		//verify..
+		
+		this.deals.add(deal);
+		if(deal.getRoom() != this) {
+			deal.setRoom(this);
+		}
+	}
+	
+	public void setMember(Member member) {
+		this.member = member;
 	}
 	
 }

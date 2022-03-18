@@ -1,7 +1,12 @@
 package com.station3.dabang.room.domain;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +31,10 @@ public class RoomRepositoryTest {
 	@Autowired
 	private MemberRepository memberRepository;
 	
+	@Autowired
+	public EntityManager em;
+	
 	private static final String email = "admin@station3.co.kr";
-	private static final String password = "Station3$";
 
 	private Room room;
 	private Deal deal1;
@@ -38,33 +45,46 @@ public class RoomRepositoryTest {
 	public void dataInit() {
 		//given
 		room = new Room(RoomType.ONE_ROOM);
-		deal1 = new Deal(room, DealType.MONTHLY, 1000, 50);
-		deal2 = new Deal(room, DealType.YEARLY, 5000, 0);
-		deal3 = new Deal(room, DealType.MONTHLY, 1500, 40);
-	}
-
-	@Test
-	@DisplayName("내방과 거래정보를 저장할 수 있어야한다.")
-	@Transactional
-	@Rollback(value = false)
-	public void createRoom() {
-		//when
-		room.member = memberRepository.findByEmail(new Email(email));
-		roomRepository.save(room);
-		dealRepository.save(deal1);
-		dealRepository.save(deal2);
-		dealRepository.save(deal3);
+		deal1 = new Deal(DealType.MONTHLY, 1000, 50);
+		deal2 = new Deal(DealType.YEARLY, 5000, 0);
+		deal3 = new Deal(DealType.MONTHLY, 1500, 40);
 	}
 	
 	@Test
-	@DisplayName("전체방을 조회한다.")
+	@DisplayName("방을 등록한다 & 등록된 방을 조회한다.")
 	@Transactional
-	@Rollback(value = false)
-	public void searchAll() {
-		Room room = roomRepository.getById(3L);
+	public void registerRoom() {
+		//given
+		room.member = memberRepository.findByEmail(new Email(email));
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		room.addDeal(deal3);
 		
-		List<Deal> deal = room.getDeal();
-		deal.forEach(s->System.out.println(s.toString()));
+		//when
+		roomRepository.save(room);
+		dealRepository.saveAll(room.getDeals());
+		
+		//then
+		assertAll(
+			()->assertEquals(room.getType(), RoomType.ONE_ROOM),
+			()->assertEquals(room.getDeals().get(0).getType(), DealType.MONTHLY),
+			()->assertEquals(room.getDeals().get(0).getDeposit(), 1000),
+			()->assertEquals(room.getDeals().get(0).getPrice(), 50)
+		);
+		
+		em.clear();	//실제 db에서 select 해오기 위해
+		
+		//when
+		Room searchRoom = roomRepository.getById(room.getId());
+		List<Deal> searchDeals = searchRoom.getDeals();
+		
+		//then
+		assertAll(
+			()->assertNotNull(searchRoom),
+			()->assertEquals(searchDeals.size(), room.getDeals().size())
+		);
+		
 	}
+	
 
 }

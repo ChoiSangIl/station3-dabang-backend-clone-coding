@@ -36,7 +36,7 @@ public class MemberRepositoryTest {
 		assertEquals(savedMember.getEmail().getValue(), email);
 		assertEquals(savedMember.getPassword().getValue(), password);
 		
-		em.clear();
+		em.clear();	//실제 db에서 select 해오기 위해
 		
 		//when
 		Member searchMember = memberRepository.getById(savedMember.getId());

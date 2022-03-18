@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -48,6 +49,7 @@ public class RoomControllerTest {
 	private static final RoomCreateDealDto deal3 = new RoomCreateDealDto (DealType.YEARLY, 10000, 0);
 	
 	@Test
+	@DisplayName("내방 등록 api 호출 테스트")
 	@WithMockUser
 	public void testRegisterRoom() throws JsonProcessingException, Exception {
 		//given
@@ -56,7 +58,7 @@ public class RoomControllerTest {
 		dealList.add(deal2);
 		dealList.add(deal3);
 		RoomCreateRequest roomCreateRequest = new RoomCreateRequest(RoomType.ONE_ROOM, dealList);
-		RoomCreateResponse roomCreateResponse = new RoomCreateResponse();
+		RoomCreateResponse roomCreateResponse = new RoomCreateResponse(1L);
 		roomCreateResponse.setRoomId(1);
 		doReturn(roomCreateResponse).when(roomService).registerRoom(any());
 		

@@ -7,21 +7,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.service.RoomService;
 
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 
 
 @RequestMapping("/rooms")
 @RestController
+@RequiredArgsConstructor
 @Api( tags = "내방관련 API")
 public class RoomController {
 
+	private final RoomService roomService;
+	
 	@PostMapping()
     @Operation(summary = "내방등록", description = "내방등록 api")
-	private String registerRoom(@RequestBody RoomCreateRequest request) {
-		request.getDealList().forEach(x->System.out.println(x.toString()));
-		return "abc";
+	private RoomCreateResponse registerRoom(@RequestBody RoomCreateRequest roomCreateRequest) {
+		return roomService.registerRoom(roomCreateRequest);
 	}
 	
 	@GetMapping()

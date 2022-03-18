@@ -65,5 +65,9 @@ public class Deal extends BaseEntity{
 	
 	public void setRoom(Room room) {
 		this.room = room;
+		
+		if(!room.getDeals().contains(this)) {
+			room.getDeals().add(this);
+		}
 	}
 }

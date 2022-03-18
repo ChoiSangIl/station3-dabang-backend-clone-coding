@@ -1,7 +1,10 @@
 package com.station3.dabang.room.controller.dto.request;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.station3.dabang.room.domain.Deal;
+import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomType;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -19,5 +22,14 @@ public class RoomCreateRequest {
 	
 	@ApiModelProperty(value = "거래정보", required = true)	
 	private List<RoomCreateDealDto> dealList;
+
+	public Room toRoom() {
+		return new Room(roomType);
+	}
 	
+	public List<Deal> toDeals(){
+		List<Deal> deals = new ArrayList<Deal>();
+		dealList.forEach(obj-> deals.add(new Deal(obj.getDealType(), obj.getDeposit(), obj.getPrice())));
+		return deals;
+	}
 }
