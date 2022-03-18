@@ -22,36 +22,34 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
 
 	@Autowired
 	RoomRepository roomRepository;
-	
+
 	@Autowired
 	MemberRepository memberRepository;
-	
+
 	@Autowired
 	DealRepository dealRepository;
-	
+
 	@Override
 	@Transactional
 	public RoomCreateResponse registerRoom(RoomCreateRequest roomCreateRequest) {
-		try {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			User user = (User)authentication.getPrincipal();
-			
-			Room room = roomCreateRequest.toRoom();
-			Member member = memberRepository.findByEmail(new Email(user.getUsername()));
+		Room room = roomCreateRequest.toRoom();
+		Member member = memberRepository.findByEmail(new Email(getUserEmail()));
 
-			roomCreateRequest.toDeals().forEach(obj->room.addDeal(obj));
-			
-			room.setMember(member);
-			roomRepository.save(room);
-			dealRepository.saveAll(room.getDeals());
-			return RoomCreateResponse.from(room);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		roomCreateRequest.toDeals().forEach(obj -> room.addDeal(obj));
+
+		room.setMember(member);
+		roomRepository.save(room);
+		dealRepository.saveAll(room.getDeals());
+		return RoomCreateResponse.from(room);
+	}
+
+	public String getUserEmail() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) authentication.getPrincipal();
+		return user.getUsername();
 	}
 }
