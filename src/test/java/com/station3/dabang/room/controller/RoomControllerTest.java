@@ -3,6 +3,7 @@ package com.station3.dabang.room.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,6 +66,32 @@ public class RoomControllerTest {
 		//when
 		mockMvc.perform(
 				post("/rooms")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(roomCreateRequest))
+		        .with(csrf())
+		)
+		
+		//then
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("내방을 가져올 수 있다.")
+	@WithMockUser
+	public void getMyRoom() throws JsonProcessingException, Exception {
+		//given
+		List<RoomCreateDealDto> dealList = new ArrayList<RoomCreateDealDto>();
+		dealList.add(deal1);
+		dealList.add(deal2);
+		dealList.add(deal3);
+		RoomCreateRequest roomCreateRequest = new RoomCreateRequest(RoomType.ONE_ROOM, dealList);
+		RoomCreateResponse roomCreateResponse = new RoomCreateResponse(1L);
+		roomCreateResponse.setRoomId(1);
+		doReturn(roomCreateResponse).when(roomService).registerRoom(any());
+		
+		//when
+		mockMvc.perform(
+				get("/rooms/member/{id}")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(roomCreateRequest))
 		        .with(csrf())

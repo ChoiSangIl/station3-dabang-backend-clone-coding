@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
 import com.station3.dabang.common.domain.BaseEntity;
+import com.station3.dabang.common.exception.BizRuntimeException;
+import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.domain.Member;
 
 import lombok.Getter;
@@ -70,9 +72,17 @@ public class Room extends BaseEntity{
 		this.deals = deal;
 	}
 	
+	public void verifyDeal(Deal deal) {
+		//전세는 무조건 1번만 들어가야한다.
+		if(deal.getType().equals(DealType.YEARLY)) {
+			if(this.deals.stream().filter(o -> o.getType().equals(DealType.YEARLY)).count()>0) {
+				throw new BizRuntimeException(ErrorCode.DEALS_DUPLICATED);
+			}
+		}
+	}
+	
 	public void addDeal(Deal deal) {
-		//verify..
-		
+		verifyDeal(deal);
 		this.deals.add(deal);
 		if(deal.getRoom() != this) {
 			deal.setRoom(this);

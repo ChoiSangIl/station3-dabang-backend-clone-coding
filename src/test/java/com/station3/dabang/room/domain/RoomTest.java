@@ -1,12 +1,16 @@
 package com.station3.dabang.room.domain;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.station3.dabang.common.exception.BizRuntimeException;
 import com.station3.dabang.member.domain.Member;
 
 public class RoomTest {
@@ -53,5 +57,43 @@ public class RoomTest {
 		assertAll(
 			()->assertNull(room)
 		);
+	}
+	
+	@Test
+	@DisplayName("거래유형을 추가할 수 있다.")
+	public void addDeals() {
+		//given
+		room = new Room(member, RoomType.ONE_ROOM);
+		Deal deal = new Deal(room, DealType.YEARLY, 1000, 0);
+		
+		//when
+		room.addDeal(deal);
+		
+		//then
+		assertAll(
+			()->assertNotNull(room.getDeals())
+		);
+	}
+	
+	@Test
+	@DisplayName("전세는 여러개 들어갈수 없다.")
+	public void addDealsExceptionTest() {
+		//given
+		room = new Room(member, RoomType.ONE_ROOM);
+		
+		Deal deal1 = new Deal(room, DealType.YEARLY, 1000, 0);
+		Deal deal2 = new Deal(room, DealType.YEARLY, 1100, 0);
+
+		//when
+		room.addDeal(deal1);
+		ThrowingCallable callable = () -> room.addDeal(deal2);
+		
+		assertAll(
+			()->assertNotNull(room.getDeals())
+		);
+		
+		assertThatExceptionOfType(BizRuntimeException.class)
+		.isThrownBy(callable)
+		.withMessageMatching("전세는 1개만 들어갈 수 있습니다.");
 	}
 }

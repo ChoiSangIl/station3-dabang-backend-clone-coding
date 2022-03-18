@@ -56,7 +56,7 @@ public class Deal extends BaseEntity{
 	}
 	
 	public void verifyPrice(DealType type, int deposit, int price){
-		if(type.equals(DealType.YEARLY) && price != 0) {
+		if(type.equals(DealType.YEARLY) && price > 0) {
 			throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_01);
 		}else if(type.equals(DealType.MONTHLY) && price == 0) {
 			throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_02);

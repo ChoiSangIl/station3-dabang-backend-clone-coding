@@ -15,7 +15,8 @@ public enum ErrorCode  {
 	NOT_READABLE("E003", "데이터 형식을 확인해주세요."),
 	DEAL_NOT_VALID_01("E004", "방 유형이 전세이면 월세가 들어갈 수 없습니다."),
 	DEAL_NOT_VALID_02("E005", "방 유형이 월세이면 월세금액이 0이상이여야 합니다."),
-	DEAL_NOT_VALID_03("E006", "보증/전세, 월세금액이 0입니다.");
+	DEAL_NOT_VALID_03("E006", "보증/전세, 월세금액이 0입니다."),
+	DEALS_DUPLICATED("E007", "전세는 1개만 들어갈 수 있습니다.");
 
 	private String code;
 	private String message;
