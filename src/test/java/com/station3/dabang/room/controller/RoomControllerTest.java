@@ -73,5 +73,4 @@ public class RoomControllerTest {
 		//then
 		.andExpect(status().isOk());
 	}
-
 }

@@ -1,5 +1,7 @@
 package com.station3.dabang.room.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,13 +27,13 @@ public class RoomController {
 	
 	@PostMapping()
     @Operation(summary = "내방등록", description = "내방등록 api")
-	private RoomCreateResponse registerRoom(@RequestBody RoomCreateRequest roomCreateRequest) {
+	private RoomCreateResponse registerRoom(@RequestBody @Valid RoomCreateRequest roomCreateRequest) {
 		return roomService.registerRoom(roomCreateRequest);
 	}
 	
 	@GetMapping()
     @Operation(summary = "내방가져오기", description = "내방가져오 api")
-	private String getRooms(@RequestBody RoomCreateRequest request) {
+	private String getRooms(@RequestBody @Valid RoomCreateRequest request) {
 		return "abc";
 	}
 }

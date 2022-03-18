@@ -2,14 +2,14 @@ package com.station3.dabang.member.service.impl;
 
 import javax.transaction.Transactional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.station3.dabang.common.exception.CustomException;
+import com.station3.dabang.common.exception.BusinessRuntimeException;
+import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.controller.dto.request.MemberCreateRequest;
 import com.station3.dabang.member.controller.dto.request.MemberLoginRequest;
 import com.station3.dabang.member.controller.dto.response.MemberCreateResponse;
@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService{
 	@Transactional
 	public MemberCreateResponse create(MemberCreateRequest memberCreateRequest) {
 		if(memberRepository.existsByEmail(new Email(memberCreateRequest.getEmail()))) {
-			throw new IllegalArgumentException("이메일이 중복되었습니다.");
+    	  	throw new BusinessRuntimeException(ErrorCode.DUPLICATE_EMAIL);
 		}
 		
 		memberCreateRequest.passwordEncryption(passwordEncoder.encode(memberCreateRequest.getPassword()));
@@ -50,7 +50,7 @@ public class MemberServiceImpl implements MemberService{
 	    	return MemberLoginResponse.from(memberRepository.findByEmail(new Email(memberLoginRequest.getEmail())), jwtTokenProvider.createToken(memberLoginRequest.getEmail()));
 	      } catch (AuthenticationException e) {
     	  	e.printStackTrace();
-    	  	throw new CustomException("아이디와 암호를 확인해주세요.", HttpStatus.UNPROCESSABLE_ENTITY);
+    	  	throw new BusinessRuntimeException(ErrorCode.AUTH_INVALID);
 	      }
 	}
 	

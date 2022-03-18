@@ -3,6 +3,8 @@ package com.station3.dabang.room.controller.dto.request;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomType;
@@ -20,7 +22,8 @@ public class RoomCreateRequest {
 	@ApiModelProperty(value = "방유형", example = "ONE_ROOM", allowableValues = "ONE_ROOM, TWO_ROOM, THREE_ROOM", required = true)
 	private RoomType roomType;
 	
-	@ApiModelProperty(value = "거래정보", required = true)	
+	@ApiModelProperty(value = "거래정보", required = true)
+	@NotNull
 	private List<RoomCreateDealDto> dealList;
 
 	public Room toRoom() {

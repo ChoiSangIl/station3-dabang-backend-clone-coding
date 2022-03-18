@@ -29,12 +29,9 @@ public class Password {
 	}
 	
 	private void verify(String password) {
-        if (!StringUtils.hasText(password)) {
-            throw new IllegalArgumentException("비밀번호는 필수값입니다.");
-        }
         Matcher matcher = pattern.matcher(password);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("비밀번호 형식을 확인해주세요.");
+            throw new IllegalArgumentException("비밀번호 형식을 확인해주세요(최소 숫자 1자리 이상, 영어 소문자 1자리 이상, 영어 대문자 1자리 이상, 특수문자 1자리 이상, 공백문자 포함하지 않고, 8자리 이상)");
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.station3.dabang.member.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +34,13 @@ public class MemberController {
 	
 	@PostMapping
     @Operation(summary = "회원가입", description = "회원가입 api")
-	private MemberCreateResponse create(@RequestBody MemberCreateRequest memeberCreateRequest) {
+	private MemberCreateResponse create(@RequestBody @Valid MemberCreateRequest memeberCreateRequest) {
 		return memberService.create(memeberCreateRequest);
 	}
 	
 	@PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 api")
-	private MemberLoginResponse login(@RequestBody MemberLoginRequest memeberLoginRequest) {
+	private MemberLoginResponse login(@RequestBody @Valid MemberLoginRequest memeberLoginRequest) {
 		return memberService.login(memeberLoginRequest);
 	}
 }

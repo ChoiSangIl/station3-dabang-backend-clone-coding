@@ -20,23 +20,5 @@ public class EmailTest {
 		email = new Email(emailAddress);
 		assertEquals(email.getValue(), emailAddress);
 	}
-	
-	@ParameterizedTest
-	@NullAndEmptySource
-	@DisplayName("값이 없으면 IllegalArgumentException이 발생한다")
-	public void nullAndEmptyCheck(String input) {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
-			email = new Email(input);
-		});
-	}
-	
-	@DisplayName("메일 형식이 다르면 IllegalArgumentException이 발생한다")
-	@ParameterizedTest
-	@ValueSource(strings= {"abcdef", "bbb@", "12456"})
-	public void verifyPassword(String input) {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
-			email = new Email(input);
-		});
-	}
 
 }
