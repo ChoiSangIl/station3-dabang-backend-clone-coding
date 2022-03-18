@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.station3.dabang.common.exception.BusinessRuntimeException;
 import com.station3.dabang.common.exception.InvalidJwtTokenException;
 
 import io.jsonwebtoken.Claims;

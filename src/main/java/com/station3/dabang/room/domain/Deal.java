@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.station3.dabang.common.domain.BaseEntity;
+import com.station3.dabang.common.exception.BizRuntimeException;
+import com.station3.dabang.common.exception.ErrorCode;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -55,11 +57,11 @@ public class Deal extends BaseEntity{
 	
 	public void verifyPrice(DealType type, int deposit, int price){
 		if(type.equals(DealType.YEARLY) && price != 0) {
-			throw new IllegalArgumentException("방 유형이 전세이면 월세가격이 들어갈수 없습니다.");
+			throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_01);
 		}else if(type.equals(DealType.MONTHLY) && price == 0) {
-			throw new IllegalArgumentException("월세 금액을 입려갛여 주십시오.");
+			throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_02);
 		}else if(deposit==0 && price==0) {
-			throw new IllegalArgumentException("금액을 확인하여 주십시오.");
+			throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_03);
 		}
 	}
 	

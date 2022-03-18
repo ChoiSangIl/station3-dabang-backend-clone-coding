@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
-	@ExceptionHandler(BusinessRuntimeException.class)
-	protected ResponseEntity<ErrorCode> handleBindException(BusinessRuntimeException e) {
+	@ExceptionHandler(BizRuntimeException.class)
+	protected ResponseEntity<ErrorCode> handleBindException(BizRuntimeException e) {
 		e.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

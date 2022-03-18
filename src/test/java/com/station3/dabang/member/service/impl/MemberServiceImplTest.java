@@ -1,4 +1,4 @@
-package com.station3.dabang.member.service;
+package com.station3.dabang.member.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.station3.dabang.common.exception.BizRuntimeException;
 import com.station3.dabang.member.controller.dto.request.MemberCreateRequest;
 import com.station3.dabang.member.controller.dto.request.MemberLoginRequest;
 import com.station3.dabang.member.controller.dto.response.MemberCreateResponse;
@@ -21,10 +22,10 @@ import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.member.domain.Password;
-import com.station3.dabang.member.service.impl.MemberServiceImpl;
+import com.station3.dabang.member.service.MemberService;
 import com.station3.dabang.security.JwtTokenProvider;
 
-public class MemberServiceTest {
+public class MemberServiceImplTest {
 
 	private final Email email = new Email("admin@station3.co.kr");
 	private final Password password = new Password("Station3#");
@@ -65,9 +66,9 @@ public class MemberServiceTest {
 			
 		ThrowingCallable callable = () -> memberService.create(memberCreateRequest);
 			
-		assertThatExceptionOfType(IllegalArgumentException.class)
+		assertThatExceptionOfType(BizRuntimeException.class)
 			.isThrownBy(callable)
-			.withMessageMatching("이메일이 중복되었습니다.");
+			.withMessageMatching("이미 등록되어있는 이메일입니다.");
 	}
 	
 	@Test

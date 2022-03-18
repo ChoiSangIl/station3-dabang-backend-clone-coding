@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.station3.dabang.common.exception.BusinessRuntimeException;
+import com.station3.dabang.common.exception.BizRuntimeException;
 import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.controller.dto.request.MemberCreateRequest;
 import com.station3.dabang.member.controller.dto.request.MemberLoginRequest;
@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService{
 	@Transactional
 	public MemberCreateResponse create(MemberCreateRequest memberCreateRequest) {
 		if(memberRepository.existsByEmail(new Email(memberCreateRequest.getEmail()))) {
-    	  	throw new BusinessRuntimeException(ErrorCode.DUPLICATE_EMAIL);
+    	  	throw new BizRuntimeException(ErrorCode.DUPLICATE_EMAIL);
 		}
 		
 		memberCreateRequest.passwordEncryption(passwordEncoder.encode(memberCreateRequest.getPassword()));
@@ -50,7 +50,7 @@ public class MemberServiceImpl implements MemberService{
 	    	return MemberLoginResponse.from(memberRepository.findByEmail(new Email(memberLoginRequest.getEmail())), jwtTokenProvider.createToken(memberLoginRequest.getEmail()));
 	      } catch (AuthenticationException e) {
     	  	e.printStackTrace();
-    	  	throw new BusinessRuntimeException(ErrorCode.AUTH_INVALID);
+    	  	throw new BizRuntimeException(ErrorCode.AUTH_INVALID);
 	      }
 	}
 	

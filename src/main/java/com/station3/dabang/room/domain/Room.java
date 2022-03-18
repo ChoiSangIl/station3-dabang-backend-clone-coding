@@ -49,8 +49,15 @@ public class Room extends BaseEntity{
 	public Room() {
 	}
 	
+	
 	public Room(RoomType type) {
 		this.type=type;
+	}
+	
+	public Room(Long id, Member member, RoomType type) {
+		this.id = id;
+		this.member = member;
+		this.type = type;
 	}
 	
 	public Room(Member member, RoomType type) {

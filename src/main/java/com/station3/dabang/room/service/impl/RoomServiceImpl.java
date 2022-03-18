@@ -13,6 +13,7 @@ import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
 import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomRepository;
@@ -39,10 +40,14 @@ public class RoomServiceImpl implements RoomService {
 		Room room = roomCreateRequest.toRoom();
 		Member member = memberRepository.findByEmail(new Email(getUserEmail()));
 
-		roomCreateRequest.toDeals().forEach(obj -> room.addDeal(obj));
+		//roomCreateRequest.toDeals().forEach(obj -> room.addDeal(obj));
+		//람다식으로 표현하면 room = roomRepository.save(room); 해당 함수를 쓸수가 없어서 테스트코드를 만들수가 없음.. 더좋은 방법을 생각해보자. 
+		for(Deal deal:roomCreateRequest.toDeals()) {
+			room.addDeal(deal);
+		}
 
 		room.setMember(member);
-		roomRepository.save(room);
+		room = roomRepository.save(room);
 		dealRepository.saveAll(room.getDeals());
 		return RoomCreateResponse.from(room);
 	}
