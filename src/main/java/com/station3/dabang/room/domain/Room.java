@@ -35,7 +35,7 @@ public class Room extends BaseEntity{
 	@Version
 	private Long version;
 	
-	@OneToMany(mappedBy="room", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy="room", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
 	List<Deal> deals = new ArrayList<Deal>();
 	
 	@OneToOne
@@ -45,8 +45,8 @@ public class Room extends BaseEntity{
 	@Column(name="ROOM_TYPE")
 	@Enumerated(EnumType.STRING)
 	private RoomType type;
-	
-	public void changeType(RoomType type) {
+
+	public void setType(RoomType type) {
 		this.type = type;
 	}
 	
@@ -94,6 +94,10 @@ public class Room extends BaseEntity{
 		if(deal.getRoom() != this) {
 			deal.setRoom(this);
 		}
+	}
+	
+	public void clearDeals() {
+		this.deals.clear();
 	}
 	
 	public void setMember(Member member) {

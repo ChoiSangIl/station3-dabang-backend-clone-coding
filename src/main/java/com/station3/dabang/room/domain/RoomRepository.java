@@ -16,6 +16,11 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
 	 * @param email
 	 * @return
 	 */
-	@Query("select r from Room r inner join r.member m where r.id = :roomId and m.email = :email")
+	@Query(
+			"select r from Room r "
+			+ "inner join r.member m "
+			+ "left outer join r.deals d "
+			+ "where r.id = :roomId and m.email = :email" 
+	)
 	Room findByRoomIdAndEmail(Long roomId, Email email);
 }

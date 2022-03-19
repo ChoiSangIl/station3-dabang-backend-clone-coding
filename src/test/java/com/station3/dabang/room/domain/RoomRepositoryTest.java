@@ -100,7 +100,8 @@ public class RoomRepositoryTest {
 		);
 
 		Room searchDeleteTarget = roomRepository.findByRoomIdAndEmail(searchMyRoom.get(0).getId(), member.getEmail());
-		roomRepository.deleteById(searchDeleteTarget.getId());
 		
+		System.out.println(searchDeleteTarget.getDeals());
+		roomRepository.deleteById(searchDeleteTarget.getId());
 	}
 }

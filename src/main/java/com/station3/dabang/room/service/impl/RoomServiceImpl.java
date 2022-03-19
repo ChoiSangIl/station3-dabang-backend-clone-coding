@@ -17,6 +17,7 @@ import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
@@ -24,6 +25,7 @@ import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
 import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomRepository;
+import com.station3.dabang.room.domain.RoomType;
 import com.station3.dabang.room.service.RoomService;
 
 import lombok.AllArgsConstructor;
@@ -91,9 +93,32 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public HttpStatus deleteRoom(Long roomId) {
-		Room room = roomRepository.findByRoomIdAndEmail(roomId, new Email(getUserEmail()));
-		if(room == null) throw new BizRuntimeException(ErrorCode.NOT_AUTH_DELETE_ROOM); 
-		else roomRepository.deleteById(roomId);
+		getRoomByIdAndEmail(roomId);
+		roomRepository.deleteById(roomId);
 		return HttpStatus.OK;
+	}
+
+	@Override
+	@Transactional
+	public HttpStatus updateRoom(RoomUpdateRequest roomUpdateRequest) {
+		Room room = getRoomByIdAndEmail(roomUpdateRequest.getRoomId());
+		room.setType(roomUpdateRequest.getRoomType());
+		
+		roomRepository.save(room);
+		dealRepository.deleteAll(room.getDeals());
+		room.getDeals().clear();
+		
+		roomUpdateRequest.toDeals().forEach(obj -> {
+			room.addDeal(obj);
+		});
+		
+		dealRepository.saveAll(room.getDeals());
+		return HttpStatus.OK;
+	}
+	
+	public Room getRoomByIdAndEmail(long roomId) {
+		Room room = roomRepository.findByRoomIdAndEmail(roomId, new Email(getUserEmail()));
+		if(room == null) throw new BizRuntimeException(ErrorCode.NOT_AUTH_DELETE_ROOM);
+		return room;
 	}
 }

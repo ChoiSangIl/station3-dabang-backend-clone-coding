@@ -21,6 +21,7 @@ import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
@@ -81,13 +82,14 @@ public class RoomServiceImplTest {
 	public void testGetRoomList() {
 		//given
 		Room room = new Room(1L, member, RoomType.ONE_ROOM);
+		Optional<Member> optionalMember = Optional.ofNullable(member);
 		List<Room> rooms = new ArrayList<Room>();
 		room.setMember(member);
 		room.addDeal(deal1);
 		room.addDeal(deal2);
 		room.addDeal(deal3);
 		rooms.add(room);
-		doReturn(member).when(memberRepository).getById(anyLong());
+		doReturn(optionalMember).when(memberRepository).findById(anyLong());
 		doReturn(rooms).when(roomRepository).findByMemberId(anyLong());
 		
 		//when
@@ -136,6 +138,25 @@ public class RoomServiceImplTest {
 		
 		//when
 		HttpStatus httpStatus = roomService.deleteRoom(room.getId());
+		
+		//then
+		assertAll(
+			()->assertEquals(httpStatus, HttpStatus.OK)
+		);
+	}
+
+	@Test
+	@DisplayName("내방을 수정한다")
+	@WithMockUser(username = email)
+	public void testUpdateRoom() {
+		List<RoomDealDto> roomUpdateDeals = new ArrayList<RoomDealDto>();
+		roomUpdateDeals.add(new RoomDealDto (DealType.MONTHLY, 3000, 30));
+		roomUpdateDeals.add(new RoomDealDto (DealType.MONTHLY, 5000, 20));
+		roomUpdateDeals.add(new RoomDealDto (DealType.YEARLY, 10000, 0));
+		RoomUpdateRequest roomUpdateRequest = new RoomUpdateRequest(1L, RoomType.ONE_ROOM, roomUpdateDeals);
+		doReturn(roomUpdateRequest.toRoom()).when(roomRepository).findByRoomIdAndEmail(anyLong(), any());
+		
+		HttpStatus httpStatus = roomService.updateRoom(roomUpdateRequest);
 		
 		//then
 		assertAll(

@@ -39,7 +39,7 @@ public class RoomTest {
 	public void update() {
 		//when
 		room = new Room(member, RoomType.ONE_ROOM);
-		room.changeType(RoomType.TWO_ROOM);
+		room.setType(RoomType.TWO_ROOM);
 		
 		//then
 		assertAll(

@@ -40,6 +40,13 @@ public class Deal extends BaseEntity{
 	public Deal() {
 	}
 	
+	public Deal(DealType type, int deposit, int price) {
+		verifyPrice(type, deposit, price);
+		this.type = type;
+		this.deposit = deposit;
+		this.price = price;
+	}
+	
 	public Deal(Room room, DealType type, int deposit, int price) {
 		verifyPrice(type, deposit, price);
 		this.room = room;
@@ -48,8 +55,9 @@ public class Deal extends BaseEntity{
 		this.price = price;
 	}
 	
-	public Deal(DealType type, int deposit, int price) {
+	public Deal(Long dealId, DealType type, int deposit, int price) {
 		verifyPrice(type, deposit, price);
+		this.id = dealId;
 		this.type = type;
 		this.deposit = deposit;
 		this.price = price;

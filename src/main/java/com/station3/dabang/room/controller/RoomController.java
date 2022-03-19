@@ -5,14 +5,15 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
@@ -63,10 +64,11 @@ public class RoomController {
 		return roomService.getRoomDetail(roomId);
 	}
 	
-	@PatchMapping("/{roomId}")
+	@PutMapping("/{roomId}")
     @Operation(summary = "내방수정하기", description = "내방수정 api")
-	private String modifyRoom(@PathVariable("roomId") Long roomId) {
-		return "abc";
+	private HttpStatus updateRoom(@PathVariable("roomId") Long roomId, @Valid @RequestBody RoomUpdateRequest roomUpdateRequest) {
+		roomUpdateRequest.setRoomId(roomId);
+		return roomService.updateRoom(roomUpdateRequest);
 	}
 	
 	@DeleteMapping("/{roomId}")

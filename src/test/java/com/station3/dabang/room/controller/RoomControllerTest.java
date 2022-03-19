@@ -7,6 +7,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
@@ -54,14 +56,6 @@ public class RoomControllerTest {
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
-	private static final Deal deal1 = new Deal (DealType.MONTHLY, 3000, 30); 
-	private static final Deal deal2 = new Deal (DealType.MONTHLY, 5000, 20); 
-	private static final Deal deal3 = new Deal(DealType.YEARLY, 10000, 0);
-	
-	private static final RoomDealDto dealDto1 = new RoomDealDto (DealType.MONTHLY, 3000, 30); 
-	private static final RoomDealDto dealDto2 = new RoomDealDto (DealType.MONTHLY, 5000, 20); 
-	private static final RoomDealDto dealDto3 = new RoomDealDto (DealType.YEARLY, 10000, 0);
-	
 	private static final Long memberId = 1L;
 	private static final String email = "dabang@station3.co.kr";
 	private static final String password = "Station3$";
@@ -73,9 +67,9 @@ public class RoomControllerTest {
 	public void testRegisterRoom() throws JsonProcessingException, Exception {
 		//given
 		List<RoomDealDto> dealList = new ArrayList<RoomDealDto>();
-		dealList.add(dealDto1);
-		dealList.add(dealDto2);
-		dealList.add(dealDto3);
+		dealList.add(new RoomDealDto (DealType.MONTHLY, 3000, 30));
+		dealList.add(new RoomDealDto (DealType.MONTHLY, 3000, 30));
+		dealList.add(new RoomDealDto (DealType.YEARLY, 10000, 0));
 		RoomCreateRequest roomCreateRequest = new RoomCreateRequest(RoomType.ONE_ROOM, dealList);
 		RoomCreateResponse roomCreateResponse = new RoomCreateResponse(1L);
 		roomCreateResponse.setRoomId(1);
@@ -101,9 +95,9 @@ public class RoomControllerTest {
 		//given
 		List<Room> rooms = new ArrayList<Room>();
 		Room room = new Room(RoomType.ONE_ROOM);
-		room.addDeal(deal1);
-		room.addDeal(deal2);
-		room.addDeal(deal3);
+		room.addDeal(new Deal (DealType.MONTHLY, 3000, 30));
+		room.addDeal(new Deal (DealType.MONTHLY, 5000, 20));
+		room.addDeal(new Deal(DealType.YEARLY, 10000, 0));
 		room.setMember(member);
 		rooms.add(room);
 		RoomListResponse roomListResponse = RoomListResponse.from(rooms);
@@ -129,9 +123,9 @@ public class RoomControllerTest {
 		//given
 		List<Room> rooms = new ArrayList<Room>();
 		Room room = new Room(RoomType.ONE_ROOM);
-		room.addDeal(deal1);
-		room.addDeal(deal2);
-		room.addDeal(deal3);
+		room.addDeal(new Deal (DealType.MONTHLY, 3000, 30));
+		room.addDeal(new Deal (DealType.MONTHLY, 5000, 20));
+		room.addDeal(new Deal(DealType.YEARLY, 10000, 0));
 		room.setMember(member);
 		rooms.add(room);
 		RoomDetailResponse roomDeatilResponse = RoomDetailResponse.from(room);
@@ -159,6 +153,30 @@ public class RoomControllerTest {
 		mockMvc.perform(
 				delete("/rooms/1")
 				.contentType(MediaType.APPLICATION_JSON)
+		        .with(csrf())
+		)
+		//then
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("내방을 수정한다.")
+	@WithMockUser
+	public void testUpdateRoom() throws Exception {
+		//given
+		List<RoomDealDto> roomUpdateDeals = new ArrayList<RoomDealDto>();
+		roomUpdateDeals.add(new RoomDealDto (DealType.MONTHLY, 3000, 30));
+		roomUpdateDeals.add(new RoomDealDto (DealType.MONTHLY, 5000, 20));
+		roomUpdateDeals.add(new RoomDealDto (DealType.YEARLY, 10000, 0));
+		
+		doReturn(HttpStatus.OK).when(roomService).updateRoom(any());
+		RoomUpdateRequest roomUpdateRequest = new RoomUpdateRequest(1L, RoomType.ONE_ROOM, roomUpdateDeals);
+		
+		//when
+		mockMvc.perform(
+				put("/rooms/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(roomUpdateRequest))
 		        .with(csrf())
 		)
 		//then

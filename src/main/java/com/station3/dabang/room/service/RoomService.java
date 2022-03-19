@@ -3,6 +3,7 @@ package com.station3.dabang.room.service;
 import org.springframework.http.HttpStatus;
 
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
@@ -35,4 +36,11 @@ public interface RoomService {
 	 * @return
 	 */
 	HttpStatus deleteRoom(Long roomId);
+	
+	/**
+	 * 내방 수정하기
+	 * @param roomUpdateRequest
+	 * @return
+	 */
+	HttpStatus updateRoom(RoomUpdateRequest roomUpdateRequest);
 }
