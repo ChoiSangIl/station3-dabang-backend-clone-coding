@@ -70,8 +70,8 @@ public class RoomServiceImpl implements RoomService {
 	 * @param memberId
 	 */
 	public void memberValidation(Long memberId) {
-		Member member = memberRepository.getById(memberId);
-		if(!member.getEmail().getValue().equals(getUserEmail())) {
+		Optional<Member> member = memberRepository.findById(memberId);
+		if(member.isEmpty() || !member.get().getEmail().getValue().equals(getUserEmail())) {
     	  	throw new BizRuntimeException(ErrorCode.LOGIN_INFO_INVALID);
 		}
 	}
