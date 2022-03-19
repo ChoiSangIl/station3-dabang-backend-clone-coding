@@ -3,6 +3,7 @@ package com.station3.dabang.room.service.impl;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -19,6 +20,7 @@ import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
 import com.station3.dabang.room.domain.DealType;
 import com.station3.dabang.room.domain.Room;
@@ -32,19 +34,26 @@ public class RoomServiceImplTest {
 	DealRepository dealRepository = mock(DealRepository.class);
 	MemberRepository memberRepository = mock(MemberRepository.class);
 	RoomServiceImpl roomService = new RoomServiceImpl(roomRepository, memberRepository, dealRepository);
-	
+
+	private static final Long memberId = 1L;
 	private static final String email = "dabang@station3.co.kr";
 	private static final String password = "Station3$";
+	private static final Member member = new Member(memberId, email, password);
+	
+	private Deal deal1 = new Deal(DealType.MONTHLY, 1000, 50);
+	private Deal deal2 = new Deal(DealType.YEARLY, 5000, 0);
+	private Deal deal3 = new Deal(DealType.MONTHLY, 1500, 40);
+	
+	private RoomDealDto dealDto1 = new RoomDealDto(DealType.MONTHLY, 5000, 50);
+	private RoomDealDto dealDto2 = new RoomDealDto(DealType.MONTHLY, 4000, 60);
+	private RoomDealDto dealDto3 = new RoomDealDto(DealType.YEARLY, 10000, 0);
 	
 	@Test
 	@DisplayName("내방을 등록 할 수 있다.")
 	@WithMockUser
 	public void testRegisterRoom() {
-		Member member = new Member(1L, email, password);
+		//given
 		List<RoomDealDto> deals = new ArrayList<RoomDealDto>();
-		RoomDealDto dealDto1 = new RoomDealDto(DealType.MONTHLY, 5000, 50);
-		RoomDealDto dealDto2 = new RoomDealDto(DealType.MONTHLY, 4000, 60);
-		RoomDealDto dealDto3 = new RoomDealDto(DealType.YEARLY, 10000, 0);
 		deals.add(dealDto1);
 		deals.add(dealDto2);
 		deals.add(dealDto3);
@@ -63,8 +72,20 @@ public class RoomServiceImplTest {
 	}
 
 	@Test
-	@WithMockUser(username = "dabang@station3.co.kr")
+	@WithMockUser(username = email)
 	public void testGetRoomList() {
+		Room room = new Room(1L, member, RoomType.ONE_ROOM);
+		room.setMember(member);
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		room.addDeal(deal3);
+		List<Room> rooms = new ArrayList<Room>();
+		
+		//given
+		doReturn(member).when(memberRepository).getById(anyLong());
+		doReturn(rooms).when(roomRepository).findByMemberId(anyLong());
+		
+		roomService.getRoomList(memberId);
 		
 	}
 }

@@ -11,9 +11,7 @@ import com.station3.dabang.room.domain.RoomType;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
 public class RoomDto {
 	
@@ -24,8 +22,27 @@ public class RoomDto {
 	@NotNull
 	private List<RoomDealDto> dealList = new ArrayList<RoomDealDto>();
 	
+	public RoomDto(RoomType roomType) {
+		this.roomType = roomType;
+	}
+	
+	private RoomDto(RoomType roomType, List<RoomDealDto> dealList) {
+		this.roomType = roomType;
+		this.dealList = dealList;	
+	}
+	
 	public Room toRoom() {
 		return new Room(roomType);
+	}
+	
+	public static RoomDto from(RoomType roomType, List<Deal> deals) {
+		return new RoomDto(roomType, fromDeals(deals));
+	}
+	
+	public static List<RoomDealDto> fromDeals(List<Deal> deals){
+		List<RoomDealDto> DealsDto = new ArrayList<RoomDealDto>();
+		deals.forEach(obj-> DealsDto.add(new RoomDealDto(obj.getType(), obj.getDeposit(), obj.getPrice())));
+		return DealsDto;
 	}
 	
 	public List<Deal> toDeals(){

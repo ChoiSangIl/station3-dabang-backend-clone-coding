@@ -38,7 +38,7 @@ public class RoomController {
 	}
 	
 	@PostMapping()
-    @Operation(summary = "내방등록", description = "내방등록 api")
+    @Operation(summary = "내방 등록하기", description = "내방등록 api")
 	private RoomCreateResponse registerRoom(@RequestBody @Valid RoomCreateRequest roomCreateRequest) {
 		return roomService.registerRoom(roomCreateRequest);
 	}

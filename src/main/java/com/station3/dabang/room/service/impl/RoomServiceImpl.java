@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import com.station3.dabang.common.exception.BizRuntimeException;
+import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
@@ -58,10 +60,17 @@ public class RoomServiceImpl implements RoomService {
 		User user = (User) authentication.getPrincipal();
 		return user.getUsername();
 	}
+	
+	public void memberValidation(Long memberId) {
+		Member member = memberRepository.getById(memberId);
+		if(!member.getEmail().getValue().equals(getUserEmail())) {
+    	  	throw new BizRuntimeException(ErrorCode.LOGIN_INFO_INVALID);
+		}
+	}
 
 	@Override
 	public RoomListResponse getRoomList(Long memberId) {
-		// TODO Auto-generated method stub
-		return null;
+		memberValidation(memberId);
+		return RoomListResponse.from(roomRepository.findByMemberId(memberId));
 	}
 }

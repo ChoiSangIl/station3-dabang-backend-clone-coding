@@ -27,11 +27,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
-import com.station3.dabang.room.controller.dto.common.RoomDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
+import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealType;
+import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomType;
 import com.station3.dabang.room.service.RoomService;
 
@@ -49,9 +50,13 @@ public class RoomControllerTest {
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
-	private static final RoomDealDto deal1 = new RoomDealDto (DealType.MONTHLY, 3000, 30); 
-	private static final RoomDealDto deal2 = new RoomDealDto (DealType.MONTHLY, 5000, 20); 
-	private static final RoomDealDto deal3 = new RoomDealDto (DealType.YEARLY, 10000, 0);
+	private static final Deal deal1 = new Deal (DealType.MONTHLY, 3000, 30); 
+	private static final Deal deal2 = new Deal (DealType.MONTHLY, 5000, 20); 
+	private static final Deal deal3 = new Deal(DealType.YEARLY, 10000, 0);
+	
+	private static final RoomDealDto dealDto1 = new RoomDealDto (DealType.MONTHLY, 3000, 30); 
+	private static final RoomDealDto dealDto2 = new RoomDealDto (DealType.MONTHLY, 5000, 20); 
+	private static final RoomDealDto dealDto3 = new RoomDealDto (DealType.YEARLY, 10000, 0);
 	
 	@Test
 	@DisplayName("내방 등록 api 호출 테스트")
@@ -59,9 +64,9 @@ public class RoomControllerTest {
 	public void testRegisterRoom() throws JsonProcessingException, Exception {
 		//given
 		List<RoomDealDto> dealList = new ArrayList<RoomDealDto>();
-		dealList.add(deal1);
-		dealList.add(deal2);
-		dealList.add(deal3);
+		dealList.add(dealDto1);
+		dealList.add(dealDto2);
+		dealList.add(dealDto3);
 		RoomCreateRequest roomCreateRequest = new RoomCreateRequest(RoomType.ONE_ROOM, dealList);
 		RoomCreateResponse roomCreateResponse = new RoomCreateResponse(1L);
 		roomCreateResponse.setRoomId(1);
@@ -85,15 +90,13 @@ public class RoomControllerTest {
 	@WithMockUser
 	public void getMyRoom() throws JsonProcessingException, Exception {
 		//given
-		List<RoomDto> rooms = new ArrayList<RoomDto>();
-		RoomDto room = new RoomDto();
-		room.setRoomType(RoomType.ONE_ROOM);
-		room.getDealList().add(deal1);
-		room.getDealList().add(deal2);
-		room.getDealList().add(deal3);
+		List<Room> rooms = new ArrayList<Room>();
+		Room room = new Room(RoomType.ONE_ROOM);
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		room.addDeal(deal3);
 		rooms.add(room);
-		RoomListResponse roomListResponse = new RoomListResponse();
-		roomListResponse.setRooms(rooms);
+		RoomListResponse roomListResponse = RoomListResponse.from(rooms);
 		
 		doReturn(roomListResponse).when(roomService).getRoomList(anyLong());
 		

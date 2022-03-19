@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +22,7 @@ import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.domain.Member;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -33,7 +35,7 @@ public class Room extends BaseEntity{
 	@Version
 	private Long version;
 	
-	@OneToMany(mappedBy="room")
+	@OneToMany(mappedBy="room", fetch = FetchType.EAGER)
 	List<Deal> deals = new ArrayList<Deal>();
 	
 	@OneToOne

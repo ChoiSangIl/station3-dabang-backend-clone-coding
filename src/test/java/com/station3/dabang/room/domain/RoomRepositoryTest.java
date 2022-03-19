@@ -13,13 +13,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.station3.dabang.member.domain.Email;
+import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 
-@SpringBootTest
+@DataJpaTest
 public class RoomRepositoryTest {
 	
 	@Autowired
@@ -34,8 +36,12 @@ public class RoomRepositoryTest {
 	@Autowired
 	public EntityManager em;
 	
+	
+	private static final Long memberId = 1L;
 	private static final String email = "dabang@station3.co.kr";
-
+	private static final String password = "Station3$";
+	private static final Member member = new Member(memberId, email, password);
+	
 	private Room room;
 	private Deal deal1;
 	private Deal deal2;
@@ -55,7 +61,7 @@ public class RoomRepositoryTest {
 	@Transactional
 	public void registerRoom() {
 		//given
-		room.member = memberRepository.findByEmail(new Email(email));
+		room.member = memberRepository.save(member);
 		room.addDeal(deal1);
 		room.addDeal(deal2);
 		room.addDeal(deal3);
@@ -84,7 +90,18 @@ public class RoomRepositoryTest {
 			()->assertEquals(searchDeals.size(), room.getDeals().size())
 		);
 		
+		em.clear();	//실제 db에서 select 해오기 위해
+		
+		//when
+		List<Room> searchMyRoom = roomRepository.findByMemberId(member.getId());
+		
+		//then
+		assertAll(
+			()->assertEquals(searchMyRoom.get(0).getType(), RoomType.ONE_ROOM),
+			()->assertEquals(searchMyRoom.get(0).getDeals().get(0).getType(), DealType.MONTHLY),
+			()->assertEquals(searchMyRoom.get(0).getDeals().get(0).getDeposit(), 1000),
+			()->assertEquals(searchMyRoom.get(0).getDeals().get(0).getPrice(), 50)
+		);
+		
 	}
-	
-
 }

@@ -13,7 +13,7 @@ public class Email {
 	
 	private static final Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 	
-	@Column(name="email")
+	@Column(name="email", unique = true)
 	private String value;
 	
 	protected Email() {
