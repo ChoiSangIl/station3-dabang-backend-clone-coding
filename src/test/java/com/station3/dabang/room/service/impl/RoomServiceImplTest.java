@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.station3.dabang.member.domain.Member;
@@ -117,6 +118,28 @@ public class RoomServiceImplTest {
 		//then
 		assertAll(
 			()->assertEquals(roomDetailResponse.getRoom().getRoomType(), optionalRoom.get().getType())
+		);
+	}
+	
+	@Test
+	@DisplayName("내방을 삭제한다")
+	@WithMockUser(username = email)
+	public void testDeleteRoom() {
+		//GIVEN
+		Room room = new Room(1L, member, RoomType.ONE_ROOM);
+		room.setMember(member);
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		room.addDeal(deal3);
+		
+		doReturn(room).when(roomRepository).findByRoomIdAndEmail(anyLong(), any());
+		
+		//when
+		HttpStatus httpStatus = roomService.deleteRoom(room.getId());
+		
+		//then
+		assertAll(
+			()->assertEquals(httpStatus, HttpStatus.OK)
 		);
 	}
 }

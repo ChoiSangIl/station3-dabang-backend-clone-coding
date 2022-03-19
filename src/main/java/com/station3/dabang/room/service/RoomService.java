@@ -1,5 +1,7 @@
 package com.station3.dabang.room.service;
 
+import org.springframework.http.HttpStatus;
+
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
@@ -26,4 +28,11 @@ public interface RoomService {
 	 * @return
 	 */
 	RoomDetailResponse getRoomDetail(Long roomId);
+	
+	/**
+	 * 내방 삭제하기
+	 * @param roomId
+	 * @return
+	 */
+	HttpStatus deleteRoom(Long roomId);
 }

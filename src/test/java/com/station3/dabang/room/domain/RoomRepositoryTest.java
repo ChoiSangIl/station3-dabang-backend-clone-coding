@@ -14,10 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
-import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 
@@ -56,7 +53,7 @@ public class RoomRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("방을 등록한다 & 등록된 방을 조회한다.")
+	@DisplayName("방 조회, 삭제, 업데이트, 등록 테스트(CRUD)")
 	@Transactional
 	public void registerRoom() {
 		//given
@@ -101,6 +98,9 @@ public class RoomRepositoryTest {
 			()->assertEquals(searchMyRoom.get(0).getDeals().get(0).getDeposit(), 1000),
 			()->assertEquals(searchMyRoom.get(0).getDeals().get(0).getPrice(), 50)
 		);
+
+		Room searchDeleteTarget = roomRepository.findByRoomIdAndEmail(searchMyRoom.get(0).getId(), member.getEmail());
+		roomRepository.deleteById(searchDeleteTarget.getId());
 		
 	}
 }

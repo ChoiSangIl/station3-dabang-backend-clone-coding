@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -144,5 +146,22 @@ public class RoomControllerTest {
 		//then
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("room.roomType").value(RoomType.ONE_ROOM.toString()));
+	}
+	
+	@Test
+	@DisplayName("내방 하나를 삭제한다.")
+	@WithMockUser
+	public void testDeleteRoom() throws Exception {
+		//given
+		doReturn(HttpStatus.OK).when(roomService).deleteRoom(anyLong());
+		
+		//when
+		mockMvc.perform(
+				delete("/rooms/1")
+				.contentType(MediaType.APPLICATION_JSON)
+		        .with(csrf())
+		)
+		//then
+		.andExpect(status().isOk());
 	}
 }

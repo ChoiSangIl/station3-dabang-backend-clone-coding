@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -86,5 +87,13 @@ public class RoomServiceImpl implements RoomService {
 		Optional<Room> room = roomRepository.findById(roomId);
 		if(!room.isPresent()) throw new BizRuntimeException(ErrorCode.ROOM_NOT_FOUND);
 		return RoomDetailResponse.from(room.get());
+	}
+
+	@Override
+	public HttpStatus deleteRoom(Long roomId) {
+		Room room = roomRepository.findByRoomIdAndEmail(roomId, new Email(getUserEmail()));
+		if(room == null) throw new BizRuntimeException(ErrorCode.NOT_AUTH_DELETE_ROOM); 
+		else roomRepository.deleteById(roomId);
+		return HttpStatus.OK;
 	}
 }

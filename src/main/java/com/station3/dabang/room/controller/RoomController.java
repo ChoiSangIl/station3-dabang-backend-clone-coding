@@ -2,6 +2,7 @@ package com.station3.dabang.room.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -47,7 +48,7 @@ public class RoomController {
 	@GetMapping("/me/{memberId}")
     @Operation(summary = "내방전체 리스트 가져오기", description = "내방가져오 api (id->고유아이디 email X)")
 	@ApiImplicitParams({
-        @ApiImplicitParam(name = "memberId", value = "회원 고유id", required = true, dataType = "int", paramType = "path", defaultValue = "1")
+        @ApiImplicitParam(name = "memberId", value = "회원 고유id", required = true, dataType = "long", paramType = "path", defaultValue = "1")
 	})
 	private RoomListResponse getRooms(@PathVariable("memberId") Long memberId) {
 		return roomService.getRoomList(memberId);
@@ -55,6 +56,9 @@ public class RoomController {
 	
 	@GetMapping("/{roomId}")
     @Operation(summary = "내방 가져오기", description = "내방 가져오기")
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "roomId", value = "내방id", required = true, dataType = "long", paramType = "path", defaultValue = "1")
+	})
 	private RoomDetailResponse getRoom(@PathVariable("roomId") Long roomId) {
 		return roomService.getRoomDetail(roomId);
 	}
@@ -66,8 +70,11 @@ public class RoomController {
 	}
 	
 	@DeleteMapping("/{roomId}")
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "roomId", value = "내방id", required = true, dataType = "long", paramType = "path", defaultValue = "1")
+	})
     @Operation(summary = "내방삭제하기", description = "내방삭제 api")
-	private String deleteRoom(@PathVariable("roomId") Long roomId) {
-		return "abc";
+	private HttpStatus deleteRoom(@PathVariable("roomId") Long roomId) {
+		return roomService.deleteRoom(roomId);
 	}
 }
