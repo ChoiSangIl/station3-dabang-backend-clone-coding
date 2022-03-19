@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
 import com.station3.dabang.room.service.RoomService;
 
@@ -54,21 +55,19 @@ public class RoomController {
 	
 	@GetMapping("/{roomId}")
     @Operation(summary = "내방 가져오기", description = "내방 가져오기")
-	private String getRoom(@PathVariable("roomId") int roomId) {
-		return "abc";
+	private RoomDetailResponse getRoom(@PathVariable("roomId") Long roomId) {
+		return roomService.getRoomDetail(roomId);
 	}
 	
 	@PatchMapping("/{roomId}")
     @Operation(summary = "내방수정하기", description = "내방수정 api")
-	private String modifyRoom(@PathVariable("roomId") int roomId) {
+	private String modifyRoom(@PathVariable("roomId") Long roomId) {
 		return "abc";
 	}
 	
 	@DeleteMapping("/{roomId}")
     @Operation(summary = "내방삭제하기", description = "내방삭제 api")
-	private String deleteRoom(@PathVariable("roomId") int roomId) {
+	private String deleteRoom(@PathVariable("roomId") Long roomId) {
 		return "abc";
 	}
-	
-	
 }

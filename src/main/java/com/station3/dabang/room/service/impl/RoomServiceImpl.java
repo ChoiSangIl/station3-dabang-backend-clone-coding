@@ -1,5 +1,7 @@
 package com.station3.dabang.room.service.impl;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
@@ -61,6 +64,10 @@ public class RoomServiceImpl implements RoomService {
 		return user.getUsername();
 	}
 	
+	/**
+	 * 정책에 따라서 체크 안해도 될듯..!?
+	 * @param memberId
+	 */
 	public void memberValidation(Long memberId) {
 		Member member = memberRepository.getById(memberId);
 		if(!member.getEmail().getValue().equals(getUserEmail())) {
@@ -72,5 +79,12 @@ public class RoomServiceImpl implements RoomService {
 	public RoomListResponse getRoomList(Long memberId) {
 		memberValidation(memberId);
 		return RoomListResponse.from(roomRepository.findByMemberId(memberId));
+	}
+
+	@Override
+	public RoomDetailResponse getRoomDetail(Long roomId) {
+		Optional<Room> room = roomRepository.findById(roomId);
+		if(!room.isPresent()) throw new BizRuntimeException(ErrorCode.ROOM_NOT_FOUND);
+		return RoomDetailResponse.from(room.get());
 	}
 }

@@ -30,6 +30,7 @@ import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealType;
@@ -92,9 +93,9 @@ public class RoomControllerTest {
 	}
 	
 	@Test
-	@DisplayName("내방을 가져올 수 있다.")
+	@DisplayName("내방 전체 리스트를 가져올 수 있다.")
 	@WithMockUser
-	public void getMyRoom() throws JsonProcessingException, Exception {
+	public void testGetMyRooms() throws JsonProcessingException, Exception {
 		//given
 		List<Room> rooms = new ArrayList<Room>();
 		Room room = new Room(RoomType.ONE_ROOM);
@@ -117,5 +118,31 @@ public class RoomControllerTest {
 		//then
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("rooms[0].roomType").value(RoomType.ONE_ROOM.toString()));
+	}
+
+	@Test
+	@DisplayName("내방 하나를 조회한다")
+	@WithMockUser
+	public void testGetRoom() throws Exception {
+		//given
+		List<Room> rooms = new ArrayList<Room>();
+		Room room = new Room(RoomType.ONE_ROOM);
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		room.addDeal(deal3);
+		room.setMember(member);
+		rooms.add(room);
+		RoomDetailResponse roomDeatilResponse = RoomDetailResponse.from(room);
+		doReturn(roomDeatilResponse).when(roomService).getRoomDetail(any());
+		
+		//when
+		mockMvc.perform(
+				get("/rooms/1")
+				.contentType(MediaType.APPLICATION_JSON)
+		        .with(csrf())
+		)
+		//then
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("room.roomType").value(RoomType.ONE_ROOM.toString()));
 	}
 }

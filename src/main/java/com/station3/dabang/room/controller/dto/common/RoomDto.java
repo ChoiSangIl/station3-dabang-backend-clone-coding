@@ -46,8 +46,8 @@ public class RoomDto {
 		return new Room(roomType);
 	}
 	
-	public static RoomDto from(Room room, List<Deal> deals) {
-		return new RoomDto(room.getType(), fromDeals(deals), room.getId(), room.getMember().getId(), room.getMember().getEmail().getValue());
+	public static RoomDto from(Room room) {
+		return new RoomDto(room.getType(), fromDeals(room.getDeals()), room.getId(), room.getMember().getId(), room.getMember().getEmail().getValue());
 	}
 	
 	public static List<RoomDealDto> fromDeals(List<Deal> deals){

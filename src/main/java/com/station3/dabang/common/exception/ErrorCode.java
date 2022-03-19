@@ -18,7 +18,8 @@ public enum ErrorCode  {
 	DEAL_NOT_VALID_03("E007", "보증/전세, 월세금액이 0입니다."),
 	DEAL_NOT_VALID_04("E008", "전세는 1개만 들어갈 수 있습니다."),
 	DEAL_NOT_VALID_05("E009", "월세/보증금 금액이 중복되었습니다."),
-	LOGIN_INFO_INVALID("E010", "잘못된 요청입니다(자신의 정보만 가져올 수 있습니다)");
+	LOGIN_INFO_INVALID("E010", "잘못된 요청입니다(자신의 정보만 가져올 수 있습니다)"),
+	ROOM_NOT_FOUND("E011", "방 상세정보가 존재하지 않습니다.");
 
 	private String code;
 	private String message;

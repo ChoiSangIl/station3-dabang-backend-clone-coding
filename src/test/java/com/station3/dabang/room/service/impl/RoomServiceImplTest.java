@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
+import com.station3.dabang.room.controller.dto.response.RoomListResponse;
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
 import com.station3.dabang.room.domain.DealType;
@@ -72,20 +75,48 @@ public class RoomServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("내방 리스트를 가져온다.")
 	@WithMockUser(username = email)
 	public void testGetRoomList() {
+		//given
+		Room room = new Room(1L, member, RoomType.ONE_ROOM);
+		List<Room> rooms = new ArrayList<Room>();
+		room.setMember(member);
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		room.addDeal(deal3);
+		rooms.add(room);
+		doReturn(member).when(memberRepository).getById(anyLong());
+		doReturn(rooms).when(roomRepository).findByMemberId(anyLong());
+		
+		//when
+		RoomListResponse roomListResponse = roomService.getRoomList(memberId);
+		
+		//then
+		assertAll(
+			()->assertEquals(roomListResponse.getRooms().size(), 1)
+		);
+	}
+
+	@Test
+	@DisplayName("내방 하나를 조회한다.")
+	public void testGetRoomDetail() {
+		//GIVEN
 		Room room = new Room(1L, member, RoomType.ONE_ROOM);
 		room.setMember(member);
 		room.addDeal(deal1);
 		room.addDeal(deal2);
 		room.addDeal(deal3);
-		List<Room> rooms = new ArrayList<Room>();
+		Optional<Room> optionalRoom = Optional.ofNullable(room);
 		
-		//given
-		doReturn(member).when(memberRepository).getById(anyLong());
-		doReturn(rooms).when(roomRepository).findByMemberId(anyLong());
+		doReturn(optionalRoom).when(roomRepository).findById(anyLong());
 		
-		roomService.getRoomList(memberId);
+		//when
+		RoomDetailResponse roomDetailResponse = roomService.getRoomDetail(optionalRoom.get().getId());
 		
+		//then
+		assertAll(
+			()->assertEquals(roomDetailResponse.getRoom().getRoomType(), optionalRoom.get().getType())
+		);
 	}
 }
