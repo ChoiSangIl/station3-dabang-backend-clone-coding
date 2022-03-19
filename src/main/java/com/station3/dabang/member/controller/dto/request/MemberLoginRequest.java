@@ -14,7 +14,7 @@ import lombok.Getter;
 @ApiModel
 @AllArgsConstructor
 public class MemberLoginRequest {
-	@ApiModelProperty(value = "email", example = "admin@station3.co.kr")
+	@ApiModelProperty(value = "email", example = "dabang@station3.co.kr")
 	@Email(message="이메일 형태를 확인해주세요")
 	private final String email;	
 

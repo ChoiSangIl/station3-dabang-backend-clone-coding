@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class EmailTest {
 
 	private Email email;
-	private String emailAddress = "admin@station3.co.kr";
+	private String emailAddress = "dabang@station3.co.kr";
 	
 	@Test
 	@DisplayName("이메일을 생성할 수 있다.")

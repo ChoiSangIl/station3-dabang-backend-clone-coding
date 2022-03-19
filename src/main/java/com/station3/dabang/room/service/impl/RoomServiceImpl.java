@@ -13,6 +13,7 @@ import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
+import com.station3.dabang.room.controller.dto.response.RoomListResponse;
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
 import com.station3.dabang.room.domain.Room;
@@ -56,5 +57,11 @@ public class RoomServiceImpl implements RoomService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) authentication.getPrincipal();
 		return user.getUsername();
+	}
+
+	@Override
+	public RoomListResponse getRoomList(Long memberId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

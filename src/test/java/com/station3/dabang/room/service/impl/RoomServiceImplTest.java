@@ -16,7 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
-import com.station3.dabang.room.controller.dto.request.RoomCreateDealDto;
+import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.domain.DealRepository;
@@ -41,10 +41,10 @@ public class RoomServiceImplTest {
 	@WithMockUser
 	public void testRegisterRoom() {
 		Member member = new Member(1L, email, password);
-		List<RoomCreateDealDto> deals = new ArrayList<RoomCreateDealDto>();
-		RoomCreateDealDto dealDto1 = new RoomCreateDealDto(DealType.MONTHLY, 5000, 50);
-		RoomCreateDealDto dealDto2 = new RoomCreateDealDto(DealType.MONTHLY, 4000, 60);
-		RoomCreateDealDto dealDto3 = new RoomCreateDealDto(DealType.YEARLY, 10000, 0);
+		List<RoomDealDto> deals = new ArrayList<RoomDealDto>();
+		RoomDealDto dealDto1 = new RoomDealDto(DealType.MONTHLY, 5000, 50);
+		RoomDealDto dealDto2 = new RoomDealDto(DealType.MONTHLY, 4000, 60);
+		RoomDealDto dealDto3 = new RoomDealDto(DealType.YEARLY, 10000, 0);
 		deals.add(dealDto1);
 		deals.add(dealDto2);
 		deals.add(dealDto3);
@@ -60,5 +60,11 @@ public class RoomServiceImplTest {
 		assertAll(
 			()->assertEquals(roomCreateResponse.getRoomId(), 1L)
 		);
+	}
+
+	@Test
+	@WithMockUser(username = "dabang@station3.co.kr")
+	public void testGetRoomList() {
+		
 	}
 }

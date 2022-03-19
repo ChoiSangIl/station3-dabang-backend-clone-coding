@@ -42,7 +42,7 @@ public class MemberControllerTest {
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
-	private static final Email email = new Email("admin@Station3.co.kr");
+	private static final Email email = new Email("dabang@station3.co.kr");
 	private static final Password password = new Password("Station3#");
 	private static final String jwtToken = "jwtTokenTestValue";
 	

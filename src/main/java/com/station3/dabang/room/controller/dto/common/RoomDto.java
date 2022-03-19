@@ -1,32 +1,29 @@
-package com.station3.dabang.room.controller.dto.request;
+package com.station3.dabang.room.controller.dto.common;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomType;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
+@Setter
 @Getter
-@ToString
-@AllArgsConstructor
-public class RoomCreateRequest {
+public class RoomDto {
 	
-	@ApiModelProperty(value = "방유형", example = "ONE_ROOM", allowableValues = "ONE_ROOM, TWO_ROOM, THREE_ROOM", required = true)
+	@ApiModelProperty(value = "방유형")
 	private RoomType roomType;
 	
 	@ApiModelProperty(value = "거래정보", required = true)
 	@NotNull
-	private List<RoomDealDto> dealList;
-
+	private List<RoomDealDto> dealList = new ArrayList<RoomDealDto>();
+	
 	public Room toRoom() {
 		return new Room(roomType);
 	}

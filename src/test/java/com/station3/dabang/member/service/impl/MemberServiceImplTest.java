@@ -27,7 +27,7 @@ import com.station3.dabang.security.JwtTokenProvider;
 
 public class MemberServiceImplTest {
 
-	private final Email email = new Email("admin@station3.co.kr");
+	private final Email email = new Email("dabang@station3.co.kr");
 	private final Password password = new Password("Station3#");
 	private final String jwtToken = "jwtToken";
 	

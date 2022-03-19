@@ -1,4 +1,4 @@
-package com.station3.dabang.room.controller.dto.request;
+package com.station3.dabang.room.controller.dto.common;
 
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealType;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class RoomCreateDealDto {
+public class RoomDealDto {
 	
 	@ApiModelProperty(value = "거래유형", example = "MONTHLY", allowableValues = "MONTHLY, YEARLY", required = true)
 	private DealType dealType;

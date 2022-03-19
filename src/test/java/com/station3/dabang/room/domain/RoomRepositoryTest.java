@@ -34,7 +34,7 @@ public class RoomRepositoryTest {
 	@Autowired
 	public EntityManager em;
 	
-	private static final String email = "admin@station3.co.kr";
+	private static final String email = "dabang@station3.co.kr";
 
 	private Room room;
 	private Deal deal1;

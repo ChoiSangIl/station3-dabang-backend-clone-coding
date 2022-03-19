@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class MemberTest {
 	
 	private Member member;
-	private static final String email = "admin@station3.co.kr";
+	private static final String email = "dabang@station3.co.kr";
 	private static final String password = "Station3#";
 	
 	@Test

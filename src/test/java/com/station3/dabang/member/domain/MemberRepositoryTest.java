@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 public class MemberRepositoryTest {
 	
-	private static final String email = "admin@station3.co.kr";
+	private static final String email = "dabang@station3.co.kr";
 	private static final String password = "Station3$";
 	
 	@Autowired
