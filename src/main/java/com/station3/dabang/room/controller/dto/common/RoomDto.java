@@ -14,9 +14,17 @@ import lombok.Getter;
 
 @Getter
 public class RoomDto {
+	@ApiModelProperty(value = "room id")
+	private Long roomId;	
 	
 	@ApiModelProperty(value = "방유형")
 	private RoomType roomType;
+
+	@ApiModelProperty(value = "멤버id")
+	private Long memberId;	
+
+	@ApiModelProperty(value = "멤버 email")
+	private String email;
 	
 	@ApiModelProperty(value = "거래정보", required = true)
 	@NotNull
@@ -26,17 +34,20 @@ public class RoomDto {
 		this.roomType = roomType;
 	}
 	
-	private RoomDto(RoomType roomType, List<RoomDealDto> dealList) {
+	private RoomDto(RoomType roomType, List<RoomDealDto> dealList, Long roomId, Long memberId, String email) {
 		this.roomType = roomType;
 		this.dealList = dealList;	
+		this.roomId = roomId;
+		this.memberId = memberId;
+		this.email = email;
 	}
 	
 	public Room toRoom() {
 		return new Room(roomType);
 	}
 	
-	public static RoomDto from(RoomType roomType, List<Deal> deals) {
-		return new RoomDto(roomType, fromDeals(deals));
+	public static RoomDto from(Room room, List<Deal> deals) {
+		return new RoomDto(room.getType(), fromDeals(deals), room.getId(), room.getMember().getId(), room.getMember().getEmail().getValue());
 	}
 	
 	public static List<RoomDealDto> fromDeals(List<Deal> deals){

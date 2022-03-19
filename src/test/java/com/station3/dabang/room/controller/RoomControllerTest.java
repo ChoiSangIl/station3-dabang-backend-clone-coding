@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
@@ -57,6 +58,11 @@ public class RoomControllerTest {
 	private static final RoomDealDto dealDto1 = new RoomDealDto (DealType.MONTHLY, 3000, 30); 
 	private static final RoomDealDto dealDto2 = new RoomDealDto (DealType.MONTHLY, 5000, 20); 
 	private static final RoomDealDto dealDto3 = new RoomDealDto (DealType.YEARLY, 10000, 0);
+	
+	private static final Long memberId = 1L;
+	private static final String email = "dabang@station3.co.kr";
+	private static final String password = "Station3$";
+	private static final Member member = new Member(memberId, email, password);
 	
 	@Test
 	@DisplayName("내방 등록 api 호출 테스트")
@@ -95,6 +101,7 @@ public class RoomControllerTest {
 		room.addDeal(deal1);
 		room.addDeal(deal2);
 		room.addDeal(deal3);
+		room.setMember(member);
 		rooms.add(room);
 		RoomListResponse roomListResponse = RoomListResponse.from(rooms);
 		

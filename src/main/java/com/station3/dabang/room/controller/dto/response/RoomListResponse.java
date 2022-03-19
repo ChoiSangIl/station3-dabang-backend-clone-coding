@@ -21,7 +21,7 @@ public class RoomListResponse {
 	public static RoomListResponse from(List<Room> rooms) {
 		List<RoomDto> roomList = new ArrayList<RoomDto>();
 		rooms.forEach(room -> {
-			roomList.add(RoomDto.from(room.getType(), room.getDeals()));
+			roomList.add(RoomDto.from(room, room.getDeals()));
 		});
 		return new RoomListResponse(roomList);
 	}
