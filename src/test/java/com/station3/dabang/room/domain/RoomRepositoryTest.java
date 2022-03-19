@@ -37,10 +37,9 @@ public class RoomRepositoryTest {
 	public EntityManager em;
 	
 	
-	private static final Long memberId = 1L;
 	private static final String email = "dabang@station3.co.kr";
 	private static final String password = "Station3$";
-	private static final Member member = new Member(memberId, email, password);
+	private static final Member member = new Member(email, password);
 	
 	private Room room;
 	private Deal deal1;

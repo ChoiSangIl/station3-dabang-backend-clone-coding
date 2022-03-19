@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.station3.dabang.common.exception.BizRuntimeException;
+import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.domain.Member;
 
 public class RoomTest {
@@ -95,5 +96,31 @@ public class RoomTest {
 		assertThatExceptionOfType(BizRuntimeException.class)
 		.isThrownBy(callable)
 		.withMessageMatching("전세는 1개만 들어갈 수 있습니다.");
+	}
+	
+	@Test
+	@DisplayName("월세인데 보증금과 월세가 중복되면 안된다.")
+	public void monthlyPriceCheck() {
+		//given
+		room = new Room(member, RoomType.ONE_ROOM);
+		
+		Deal deal1 = new Deal(room, DealType.MONTHLY, 1000, 50);
+		Deal deal2 = new Deal(room, DealType.MONTHLY, 5000, 30);
+		Deal deal3 = new Deal(room, DealType.MONTHLY, 1000, 50);
+
+		//when
+		room.addDeal(deal1);
+		room.addDeal(deal2);
+		
+		
+		ThrowingCallable callable = () -> room.addDeal(deal3);
+		
+		assertAll(
+			()->assertNotNull(room.getDeals())
+		);
+		
+		assertThatExceptionOfType(BizRuntimeException.class)
+		.isThrownBy(callable)
+		.withMessageMatching(ErrorCode.DEAL_NOT_VALID_05.getMessage());
 	}
 }

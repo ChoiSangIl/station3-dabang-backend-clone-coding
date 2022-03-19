@@ -22,7 +22,6 @@ import com.station3.dabang.common.exception.ErrorCode;
 import com.station3.dabang.member.domain.Member;
 
 import lombok.Getter;
-import lombok.ToString;
 
 @Entity
 @Getter
@@ -75,10 +74,15 @@ public class Room extends BaseEntity{
 	}
 	
 	public void verifyDeal(Deal deal) {
-		//전세는 무조건 1번만 들어가야한다.
 		if(deal.getType().equals(DealType.YEARLY)) {
+			//전세 -> 무조건 1번만 들어가야한다.
 			if(this.deals.stream().filter(o -> o.getType().equals(DealType.YEARLY)).count()>0) {
-				throw new BizRuntimeException(ErrorCode.DEALS_DUPLICATED);
+				throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_04);
+			}
+		}else if(deal.getType().equals(DealType.MONTHLY)) {
+			//월세 -> 보증금과 월세가 같은게 들어오면 안된다.
+			if(this.deals.stream().filter(o -> o.getType().equals(DealType.MONTHLY) && o.getDeposit() == deal.getDeposit() && o.getPrice() == deal.getPrice()).count() == 1) {
+				throw new BizRuntimeException(ErrorCode.DEAL_NOT_VALID_05);
 			}
 		}
 	}
