@@ -1,5 +1,8 @@
 package com.station3.dabang.member.service.impl;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.transaction.Transactional;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +41,8 @@ public class MemberServiceImpl implements MemberService{
     	  	throw new BizRuntimeException(ErrorCode.DUPLICATE_EMAIL);
 		}
 		
+		passwordValidation(memberCreateRequest.getPassword());
+		
 		memberCreateRequest.passwordEncryption(passwordEncoder.encode(memberCreateRequest.getPassword()));
 		Member saveMember = memberRepository.save(memberCreateRequest.toMemeber());
 		return MemberCreateResponse.from(saveMember, jwtTokenProvider.createToken(saveMember.getEmail().getValue()));
@@ -52,6 +57,14 @@ public class MemberServiceImpl implements MemberService{
     	  	e.printStackTrace();
     	  	throw new BizRuntimeException(ErrorCode.AUTH_INVALID);
 	      }
+	}
+	
+	public void passwordValidation(String password) {
+	    Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&+=])(?=\\S+$).{8,}$");
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            throw new BizRuntimeException(ErrorCode.PASSWORD_INVALID);
+        }
 	}
 	
 }

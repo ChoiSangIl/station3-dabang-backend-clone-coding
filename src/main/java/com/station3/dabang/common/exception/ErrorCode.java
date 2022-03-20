@@ -20,7 +20,8 @@ public enum ErrorCode  {
 	DEAL_NOT_VALID_05("E009", "월세/보증금 금액이 중복되었습니다."),
 	LOGIN_INFO_INVALID("E010", "잘못된 요청입니다(자신의 정보만 가져올 수 있습니다)"),
 	ROOM_NOT_FOUND("E011", "방 상세정보가 존재하지 않습니다."),
-	NOT_AUTH_DELETE_ROOM("E012", "방이 존재하지 않거나, 방을 삭제할 권한이 없습니다.");
+	NOT_AUTH_DELETE_ROOM("E012", "방이 존재하지 않거나, 방을 삭제할 권한이 없습니다."),
+	PASSWORD_INVALID("E013", "비밀번호 형식을 확인해주세요(최소 숫자 1자리 이상, 영어 소문자 1자리 이상, 영어 대문자 1자리 이상, 특수문자 1자리 이상, 공백문자 포함하지 않고, 8자리 이상)");
 
 	private String code;
 	private String message;
