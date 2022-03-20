@@ -1,11 +1,18 @@
 # station3 dabang 면접 과제
 
-### git clone and run
+### git clone and run  
+java version : JAVASE-11
 ```
 git clone https://github.com/ChoiSangIl/station3-dabang-backend.git
+
 cd station3-dabang-backend
 ./mvnw clean install -U
 ./mvnw spring-boot:run
+
+OR
+
+ide import maven project  
+spring boot run
 ```
 
 ### api 명세(Swagger3)
