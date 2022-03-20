@@ -1,8 +1,4 @@
 # station3 dabang 면접 과제
-### h2 db 사용
-```
-docker run -d -p 1521:1521 -p 8090:81 -v /path/to/local/data_dir:/opt/h2-data -e H2_OPTIONS='-ifNotExists' --name=dabang oscarfonts/h2:1.4.199
-```
 
 ### git clone and run
 ```
@@ -31,13 +27,13 @@ Swagger 회원관련 API /members or /members/login 호출
 ##### swagger Authorize
 생성된 jwtToken으로 value값 셋팅 후 API 호출
 
-### H2콘솔 접속
-[http://localhost:8090/](http://localhost:8090/)  
-JDBC URL: jdbc:h2:tcp://localhost:1521/dabang  
+### H2콘솔 접속 (메모리디비)
+[http://localhost:8080/h2-console](http://localhost:8080/h2-console)  
+JDBC URL: jdbc:h2:mem:dabang  
 사용자명 sa
 
 ## 기본 데이터 생성
-프로젝트 시작시 회원 데이터 및 샘플용 내방 데이터 자동 등록
+프로젝트 시작시 회원 데이터 자동 등록
 ```
 id : 1
 email : dabang@station3.co.kr
