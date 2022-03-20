@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Allow swagger to be accessed without authentication
     web.ignoring().antMatchers("/v3/api-docs")//
         .antMatchers("/swagger-resources/**")//
+        .antMatchers("/swagger-ui.html")//
         .antMatchers("/swagger-ui/*")//
         .antMatchers("/configuration/**")//
         .antMatchers("/webjars/**")//

@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.station3.dabang.common.domain.BaseEntity;
 import com.station3.dabang.common.exception.BizRuntimeException;
 import com.station3.dabang.common.exception.ErrorCode;
@@ -35,7 +37,8 @@ public class Room extends BaseEntity{
 	@Version
 	private Long version;
 	
-	@OneToMany(mappedBy="room", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
+	@OneToMany(mappedBy="room", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+	@BatchSize(size = 3)
 	List<Deal> deals = new ArrayList<Deal>();
 	
 	@OneToOne

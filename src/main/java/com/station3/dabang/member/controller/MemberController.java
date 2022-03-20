@@ -14,7 +14,6 @@ import com.station3.dabang.member.controller.dto.response.MemberLoginResponse;
 import com.station3.dabang.member.service.MemberService;
 
 import io.swagger.annotations.Api;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -33,13 +32,11 @@ public class MemberController {
 	private final MemberService memberService;
 	
 	@PostMapping
-    @Operation(summary = "회원가입", description = "회원가입 api")
 	private MemberCreateResponse create(@RequestBody @Valid MemberCreateRequest memeberCreateRequest) {
 		return memberService.create(memeberCreateRequest);
 	}
 	
 	@PostMapping("/login")
-    @Operation(summary = "로그인", description = "로그인 api")
 	private MemberLoginResponse login(@RequestBody @Valid MemberLoginRequest memeberLoginRequest) {
 		return memberService.login(memeberLoginRequest);
 	}

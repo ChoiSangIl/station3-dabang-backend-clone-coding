@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +40,8 @@ public class RoomServiceImplTest {
 	RoomRepository roomRepository = mock(RoomRepository.class);
 	DealRepository dealRepository = mock(DealRepository.class);
 	MemberRepository memberRepository = mock(MemberRepository.class);
-	RoomServiceImpl roomService = new RoomServiceImpl(roomRepository, memberRepository, dealRepository);
+	EntityManager em = mock(EntityManager.class);
+	RoomServiceImpl roomService = new RoomServiceImpl(roomRepository, memberRepository, dealRepository, em);
 
 	private static final Long memberId = 1L;
 	private static final String email = "dabang@station3.co.kr";
@@ -79,7 +82,7 @@ public class RoomServiceImplTest {
 	@Test
 	@DisplayName("내방 리스트를 가져온다.")
 	@WithMockUser(username = email)
-	public void testGetRoomList() {
+	public void testGetMemberRoomList() {
 		//given
 		Room room = new Room(1L, member, RoomType.ONE_ROOM);
 		Optional<Member> optionalMember = Optional.ofNullable(member);
@@ -93,7 +96,7 @@ public class RoomServiceImplTest {
 		doReturn(rooms).when(roomRepository).findByMemberId(anyLong());
 		
 		//when
-		RoomListResponse roomListResponse = roomService.getRoomList(memberId);
+		RoomListResponse roomListResponse = roomService.getMemberRoomList(memberId);
 		
 		//then
 		assertAll(
@@ -162,5 +165,9 @@ public class RoomServiceImplTest {
 		assertAll(
 			()->assertEquals(httpStatus, HttpStatus.OK)
 		);
+	}
+
+	@Test
+	public void testGetRoomList() {
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomSearchRequest;
 import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
@@ -35,9 +36,9 @@ public class RoomController {
 	private final RoomService roomService;
 	
 	@GetMapping()
-    @Operation(summary = "전체방 가져오기", description = "내방등록 api")
-	private RoomCreateResponse getRooms(@RequestBody @Valid RoomCreateRequest roomCreateRequest) {
-		return roomService.registerRoom(roomCreateRequest);
+    @Operation(summary = "전체방 가져오기", description = "내방등록 api swagger position 이슈로인한 파라미터 정렬안됨...(참고:https://github.com/springfox/springfox/issues/3391)")
+	private RoomListResponse getRooms(@Valid RoomSearchRequest roomCreateRequest) {
+		return roomService.getRoomList(roomCreateRequest);
 	}
 	
 	@PostMapping()
@@ -49,10 +50,10 @@ public class RoomController {
 	@GetMapping("/me/{memberId}")
     @Operation(summary = "내방전체 리스트 가져오기", description = "내방가져오 api (id->고유아이디 email X)")
 	@ApiImplicitParams({
-        @ApiImplicitParam(name = "memberId", value = "회원 고유id", required = true, dataType = "long", paramType = "path", defaultValue = "1")
+        @ApiImplicitParam(name = "memberId", value = "회원 고유id example-1", required = true, dataType = "long", paramType = "path", defaultValue = "1")
 	})
 	private RoomListResponse getRooms(@PathVariable("memberId") Long memberId) {
-		return roomService.getRoomList(memberId);
+		return roomService.getMemberRoomList(memberId);
 	}
 	
 	@GetMapping("/{roomId}")

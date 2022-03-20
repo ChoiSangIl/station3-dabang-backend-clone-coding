@@ -102,7 +102,7 @@ public class RoomControllerTest {
 		rooms.add(room);
 		RoomListResponse roomListResponse = RoomListResponse.from(rooms);
 		
-		doReturn(roomListResponse).when(roomService).getRoomList(anyLong());
+		doReturn(roomListResponse).when(roomService).getMemberRoomList(anyLong());
 		
 		//when
 		mockMvc.perform(
@@ -181,5 +181,36 @@ public class RoomControllerTest {
 		)
 		//then
 		.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("방을 조회한다")
+	@WithMockUser
+	public void testGetRooms() throws Exception {
+		//given
+		List<Room> rooms = new ArrayList<Room>();
+		Room room = new Room(RoomType.ONE_ROOM);
+		room.addDeal(new Deal (DealType.MONTHLY, 3000, 30));
+		room.addDeal(new Deal (DealType.MONTHLY, 5000, 20));
+		room.addDeal(new Deal(DealType.YEARLY, 10000, 0));
+		room.setMember(member);
+		rooms.add(room);
+		RoomListResponse roomListResponse = RoomListResponse.from(rooms);
+		
+		doReturn(roomListResponse).when(roomService).getRoomList(any());
+		
+		//when
+		mockMvc.perform(
+				get("/rooms")
+				.contentType(MediaType.APPLICATION_JSON)
+				.queryParam("offset", "0")
+				.queryParam("limit", "10")
+				.queryParam("roomType", "ONE_ROOM")
+				.queryParam("dealType", "MONTHLY")
+		        .with(csrf())
+		)
+		//then
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("rooms[0].roomType").value(RoomType.ONE_ROOM.toString()));
 	}
 }

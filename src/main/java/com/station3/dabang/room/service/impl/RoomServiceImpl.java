@@ -1,28 +1,38 @@
 package com.station3.dabang.room.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.station3.dabang.common.exception.BizRuntimeException;
 import com.station3.dabang.common.exception.ErrorCode;
+import com.station3.dabang.common.util.ObjectUtil;
 import com.station3.dabang.member.domain.Email;
 import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
+import com.station3.dabang.member.domain.QMember;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomSearchRequest;
 import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
 import com.station3.dabang.room.controller.dto.response.RoomListResponse;
 import com.station3.dabang.room.domain.Deal;
 import com.station3.dabang.room.domain.DealRepository;
+import com.station3.dabang.room.domain.DealType;
+import com.station3.dabang.room.domain.QDeal;
+import com.station3.dabang.room.domain.QRoom;
 import com.station3.dabang.room.domain.Room;
 import com.station3.dabang.room.domain.RoomRepository;
 import com.station3.dabang.room.domain.RoomType;
@@ -34,14 +44,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-	@Autowired
-	RoomRepository roomRepository;
+	private final RoomRepository roomRepository;
 
-	@Autowired
-	MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-	@Autowired
-	DealRepository dealRepository;
+	private final DealRepository dealRepository;
+	
+	private final EntityManager em;
 
 	@Override
 	@Transactional
@@ -79,7 +88,7 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public RoomListResponse getRoomList(Long memberId) {
+	public RoomListResponse getMemberRoomList(Long memberId) {
 		memberValidation(memberId);
 		return RoomListResponse.from(roomRepository.findByMemberId(memberId));
 	}
@@ -121,4 +130,47 @@ public class RoomServiceImpl implements RoomService {
 		if(room == null) throw new BizRuntimeException(ErrorCode.NOT_AUTH_DELETE_ROOM);
 		return room;
 	}
+
+	@Override
+	public RoomListResponse getRoomList(RoomSearchRequest roomSearchRequest) {
+		JPAQueryFactory query = new JPAQueryFactory(em);
+		
+		QRoom room = QRoom.room;
+		QDeal deal = QDeal.deal;
+		QMember member = QMember.member;
+		
+		BooleanBuilder builder = new BooleanBuilder();
+		if(!ObjectUtil.isEmpty(roomSearchRequest.getRoomType())) {
+			builder.and(room.type.eq(RoomType.valueOf(roomSearchRequest.getRoomType())));
+		}
+		if(!ObjectUtil.isEmpty(roomSearchRequest.getDealType())) {
+			builder.and(deal.type.eq(DealType.valueOf(roomSearchRequest.getDealType())));	
+		}
+		if(!ObjectUtil.isEmpty(roomSearchRequest.getDepositStart())) {
+			builder.and(deal.deposit.goe(roomSearchRequest.getDepositStart()));
+		}
+		if(!ObjectUtil.isEmpty(roomSearchRequest.getDepositEnd())) {
+			builder.and(deal.deposit.loe(roomSearchRequest.getDepositEnd()));
+		}
+		if(!ObjectUtil.isEmpty(roomSearchRequest.getPriceStart())) {
+			builder.and(deal.price.goe(roomSearchRequest.getPriceStart()));
+		}
+		if(!ObjectUtil.isEmpty(roomSearchRequest.getPriceEnd())) {
+			builder.and(deal.price.loe(roomSearchRequest.getPriceEnd()));
+		}
+		
+		List<Room> memberList = query
+				.selectFrom(room)
+				.join(room.deals, deal)
+				.join(room.member, member).fetchJoin()
+				.where(builder)
+				.groupBy(room.id, room.type, member.email)
+				.orderBy(room.id.desc())
+				.offset(roomSearchRequest.getOffset())
+				.limit(roomSearchRequest.getLimit())
+				.fetch();
+		
+		return 	RoomListResponse.from(memberList);
+	}
+
 }
