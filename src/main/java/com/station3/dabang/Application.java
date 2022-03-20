@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Application implements CommandLineRunner{
 	
-	private final MemberService memberService;
+//	private final MemberService memberService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -21,7 +21,7 @@ public class Application implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		MemberCreateRequest memberCreateRequest = new MemberCreateRequest("dabang@station3.co.kr", "Station3#");
-		memberService.create(memberCreateRequest);
+	//	MemberCreateRequest memberCreateRequest = new MemberCreateRequest("dabang@station3.co.kr", "Station3#");
+	//	memberService.create(memberCreateRequest);
 	}
 }

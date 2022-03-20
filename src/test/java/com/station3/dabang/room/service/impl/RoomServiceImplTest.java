@@ -23,6 +23,7 @@ import com.station3.dabang.member.domain.Member;
 import com.station3.dabang.member.domain.MemberRepository;
 import com.station3.dabang.room.controller.dto.common.RoomDealDto;
 import com.station3.dabang.room.controller.dto.request.RoomCreateRequest;
+import com.station3.dabang.room.controller.dto.request.RoomSearchRequest;
 import com.station3.dabang.room.controller.dto.request.RoomUpdateRequest;
 import com.station3.dabang.room.controller.dto.response.RoomCreateResponse;
 import com.station3.dabang.room.controller.dto.response.RoomDetailResponse;
@@ -57,7 +58,7 @@ public class RoomServiceImplTest {
 	private RoomDealDto dealDto3 = new RoomDealDto(DealType.YEARLY, 10000, 0);
 	
 	@Test
-	@DisplayName("내방을 등록 할 수 있다.")
+	@DisplayName("내방을 등록할 수 있다.")
 	@WithMockUser
 	public void testRegisterRoom() {
 		//given
@@ -80,7 +81,7 @@ public class RoomServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("내방 리스트를 가져온다.")
+	@DisplayName("내방 리스트를 가져올 수 있다.")
 	@WithMockUser(username = email)
 	public void testGetMemberRoomList() {
 		//given
@@ -105,7 +106,7 @@ public class RoomServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("내방 하나를 조회한다.")
+	@DisplayName("내방 하나를 조회할 수 있다.")
 	public void testGetRoomDetail() {
 		//GIVEN
 		Room room = new Room(1L, member, RoomType.ONE_ROOM);
@@ -127,7 +128,7 @@ public class RoomServiceImplTest {
 	}
 	
 	@Test
-	@DisplayName("내방을 삭제한다")
+	@DisplayName("내방을 삭제할 수 있다.")
 	@WithMockUser(username = email)
 	public void testDeleteRoom() {
 		//GIVEN
@@ -149,7 +150,7 @@ public class RoomServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("내방을 수정한다")
+	@DisplayName("내방을 수정할 수 있다.")
 	@WithMockUser(username = email)
 	public void testUpdateRoom() {
 		List<RoomDealDto> roomUpdateDeals = new ArrayList<RoomDealDto>();
@@ -168,6 +169,13 @@ public class RoomServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("방을 검색할 수 있다.")
+	@WithMockUser(username = email)
 	public void testGetRoomList() {
+		RoomSearchRequest roomSearchRequest = new RoomSearchRequest(0, 10, RoomType.ONE_ROOM.toString(), DealType.MONTHLY.toString(), 0, 2000, 0, 100);
+		/**
+		 * JPAQueryFactory 객체를 서비스에서 직접 사용하다보니 테스트가 어려움
+		 * queryDsl을 인터페이스화 해서 주입시키는 방법을 알아야 테스트가 가능할듯..!
+		 */
 	}
 }

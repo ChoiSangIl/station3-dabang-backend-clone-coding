@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -139,6 +138,7 @@ public class RoomServiceImpl implements RoomService {
 		QDeal deal = QDeal.deal;
 		QMember member = QMember.member;
 		
+		//이놈을 어이 해야할고... QueryDsl 공부가 필요
 		BooleanBuilder builder = new BooleanBuilder();
 		if(!ObjectUtil.isEmpty(roomSearchRequest.getRoomType())) {
 			builder.and(room.type.eq(RoomType.valueOf(roomSearchRequest.getRoomType())));
