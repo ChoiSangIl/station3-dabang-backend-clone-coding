@@ -45,7 +45,7 @@ public class RoomServiceImplTest {
 
 	private static final Long memberId = 1L;
 	private static final String email = "dabang@station3.co.kr";
-	private static final String password = "Station3$";
+	private static final String password = "Station3#";
 	private static final Member member = new Member(memberId, email, password);
 	
 	private Deal deal1 = new Deal(DealType.MONTHLY, 1000, 50);

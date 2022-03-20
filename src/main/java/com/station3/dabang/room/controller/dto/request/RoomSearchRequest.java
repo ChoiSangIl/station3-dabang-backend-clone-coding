@@ -1,7 +1,6 @@
 package com.station3.dabang.room.controller.dto.request;
 
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

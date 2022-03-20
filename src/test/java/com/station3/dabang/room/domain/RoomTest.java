@@ -17,7 +17,7 @@ import com.station3.dabang.member.domain.Member;
 public class RoomTest {
 	private Room room;
 	private final String email = "dabang@station3.co.kr";
-	private final String password = "Station3$";
+	private final String password = "Station3#";
 	private final Member member = new Member(email, password);
 	
 	@Test
